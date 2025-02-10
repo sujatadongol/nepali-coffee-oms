@@ -17,10 +17,11 @@ export default function Home() {
 
   return (
     <div className="container">
-      <h2 className="text-center mt-2">
-        <span className="py-2 px-4" style={{ color: "#4B2E2E" }}>
-          Nepali Coffee
-        </span>
+      <h2
+        className="text-center"
+        style={{ color: "#4B2E2E", borderBottom: "1px solid", padding: "1rem" }}
+      >
+        Nepali Coffee
       </h2>
 
       {selectedTable ? (
@@ -30,13 +31,17 @@ export default function Home() {
           onBack={() => setSelectedTable(null)}
         />
       ) : (
-        <div className="mt-5" style={{ display: "flex", flexWrap: "wrap", gap: "16px" }}>
+        <div
+          className="mt-5"
+          style={{ display: "flex", flexWrap: "wrap", gap: "16px" }}
+        >
           {cafeTables.map((item) => (
             <Card
               key={item.id}
               title={item.name}
               hoverable
-              style={{ width: 350, textAlign: "center" }}
+              headStyle={{ background: "#d8cfc66b" }}
+              style={{ width: "48%", textAlign: "center" }}
               onClick={() => setSelectedTable(item)}
             >
               <p>
