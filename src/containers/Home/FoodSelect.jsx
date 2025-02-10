@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Row, Col, InputNumber, Card, Button } from "antd";
 import { PlusOutlined } from '@ant-design/icons';
-import FoodCategory from "./FoodCategory";
+
 
 const { Meta } = Card;
 
@@ -23,8 +23,7 @@ const FoodSelect = ({ foodItems, onChange, makeOrder }) => {
 
   return (
     <div>
-      {/* <FoodCategory /> */}
-      <Row gutter={[16, 16]}>
+      {/* <Row gutter={[16, 16]}>
         {foodItems.map((food) => (
           <Col span={8} key={food.id}>
             <Card
@@ -55,7 +54,7 @@ const FoodSelect = ({ foodItems, onChange, makeOrder }) => {
             </Card>
           </Col>
         ))}
-      </Row>
+      </Row> */}
     </div>
   );
 };

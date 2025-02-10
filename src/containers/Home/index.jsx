@@ -1,97 +1,54 @@
-import React from "react";
-import useHomeHooks from "./useHomeHooks";
-import styled from "styled-components";
-import { Select } from "antd";
-import FoodSelect from "./FoodSelect";
-import OrderSystem from "./OrderSystem";
-import {  UserOutlined  } from "@ant-design/icons";
+import React, { useState } from "react";
+import { UserOutlined } from "@ant-design/icons";
+import { Card, Tag, Button } from "antd";
+import FoodCategory from "./FoodCategory";
 
-const { Option } = Select;
+export default function Home() {
+  const [cafeTables, setCafeTables] = useState([
+    { id: 1, name: "Table 1", capacity: 2, available: true, orderItems: [] },
+    { id: 2, name: "Table 2", capacity: 4, available: true, orderItems: [] },
+    { id: 3, name: "Table 3", capacity: 2, available: true, orderItems: [] },
+    { id: 4, name: "Table 4", capacity: 6, available: true, orderItems: [] },
+    { id: 5, name: "Table 5", capacity: 4, available: true, orderItems: [] },
+    { id: 6, name: "Table 6", capacity: 2, available: true, orderItems: [] },
+  ]);
 
-const HomeWrapper = styled.div`
-  .list-wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  padding: 30px;
-  .one-table {
-    padding: 20px;
-    display: flex;
-    align-items: center;
-    text-align: center;
-    border: 1px solid grey;
-    cursor: pointer;
-    &:hover {
-      background-color: #f7e7b3;
-    }
-  }
-`;
-const Home = () => {
-  const {
-    cafeTables,
-    selectedTable,
-    setSelectedTable,
-    selectOrderFunc,
-    foodItems,
-    makeOrder,
-  } = useHomeHooks();
+  const [selectedTable, setSelectedTable] = useState(null);
+
   return (
-    <HomeWrapper>
+    <div className="container">
+      <h2 className="text-center mt-2">
+        <span className="py-2 px-4" style={{ color: "#4B2E2E" }}>
+          Nepali Coffee
+        </span>
+      </h2>
+
       {selectedTable ? (
-        <>
-          <button className="btn btn-dark" onClick={() => setSelectedTable(undefined)}>Close</button>
-          <div><h3 className="my-3">{selectedTable?.name}</h3></div>
-          <div className="row d-flex">
-            <div className="col-6">
-              <FoodSelect
-                onChange={(item) => selectOrderFunc(item)}
-                foodItems={foodItems}
-                makeOrder={makeOrder}
-              />
-            </div>
-            <div className="col-6">
-              <OrderSystem
-                selectedTable={cafeTables?.find(
-                  (tab) => tab?.id === selectedTable?.id
-                )}
-              />
-            </div>
-          </div>
-         
-          
-        </>
+        <FoodCategory
+          table={selectedTable}
+          setCafeTables={setCafeTables}
+          onBack={() => setSelectedTable(null)}
+        />
       ) : (
-        <div className="list-wrapper">
-        <h2>Nepali Coffee</h2>
-        <div className="row">
-          {cafeTables?.map((one) => (
-            <div
-              key={one?.id}
-              className='col-md-3 m-4' // Adds different background color based on availability
-              onClick={() => setSelectedTable(one)}
-              style={{
-                padding: '20px',
-                width: '300px',
-                height: '150px',
-                textAlign: 'center',
-                cursor: 'pointer',
-                borderRadius: '8px',
-                background: !one.available ? '#cbcbcb' : '#88a3f2',
-                border: !one.available ? '1px solidrgb(0, 97, 32)' : '1px solid #604be8',
-              }}
+        <div className="mt-5" style={{ display: "flex", flexWrap: "wrap", gap: "16px" }}>
+          {cafeTables.map((item) => (
+            <Card
+              key={item.id}
+              title={item.name}
+              hoverable
+              style={{ width: 350, textAlign: "center" }}
+              onClick={() => setSelectedTable(item)}
             >
-              <h5>{one?.name}</h5>
-              <span>{one.available ? 'Available' : 'Occupied'}</span>
-              <div><UserOutlined /> {one.capacity}</div>
-            </div>
+              <p>
+                <UserOutlined /> <strong>{item.capacity}</strong>
+              </p>
+              <Tag color={item.available ? "green" : "red"}>
+                {item.available ? "Available" : "Occupied"}
+              </Tag>
+            </Card>
           ))}
         </div>
-      </div>
-      
       )}
-    </HomeWrapper>
+    </div>
   );
-};
-
-export default Home;
+}

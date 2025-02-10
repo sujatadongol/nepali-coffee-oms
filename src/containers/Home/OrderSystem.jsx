@@ -72,9 +72,9 @@ const OrderSystem = ({ selectedTable }) => {
             }
                 `}
             </style>
-      {selectedTable && (
+      {/* {selectedTable && (
         <>
-          {/* Print Button */}
+          
           <Button
             type="default"
             icon={<PrinterOutlined />}
@@ -100,7 +100,7 @@ const OrderSystem = ({ selectedTable }) => {
             />
           </div>
         </>
-      )}
+      )} */}
     </div>
   );
 };
