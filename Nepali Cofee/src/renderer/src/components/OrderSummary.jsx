@@ -46,15 +46,6 @@ const OrderSummary = ({
     documentTitle: 'customer-bill'
   })
 
-  const handleRemoveOrder = (id) => {
-    setOrderSummary(
-      (prevOrders) =>
-        prevOrders
-          .map((item) => (item.id === id ? { ...item, quantity: item.quantity - 1 } : item))
-          .filter((item) => item.quantity > 0) // Remove only if quantity reaches 0
-    )
-  }
-
   return (
     <>
       <div
@@ -135,9 +126,11 @@ const OrderSummary = ({
             paidOrders[getFormattedDate()] = [...orderSummary]
           }
           setTransactions(paidOrders)
+          localStorage.setItem('transactionHistory', JSON.stringify(paidOrders))
           setPaymentConfirmationModal(false)
           setPaymentConfirmationStatus(true)
           clearOrder()
+          handlePrint()
           onBack()
         }}
       />

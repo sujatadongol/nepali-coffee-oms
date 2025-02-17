@@ -8,5 +8,15 @@ function getDayMonthYear(dateValue = new Date()) {
 
 export function getFormattedDate() {
   const { day, month, year } = getDayMonthYear()
-  return `${day}/${month}/${year}`
+  // return `${day}/${month}/${year}`
+
+  return `19/02/2025`
+}
+
+export function formatDateInReadableFormat(dateStr) {
+  const [day, month, year] = dateStr.split('/').map(Number)
+  const date = new Date(year, month - 1, day) // Month is zero-based in JS
+  const options = { day: 'numeric', month: 'short', year: 'numeric' }
+
+  return date.toLocaleDateString('en-GB', options).replace(',', '')
 }

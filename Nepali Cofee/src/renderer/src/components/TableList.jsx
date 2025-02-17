@@ -1,9 +1,11 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { UserOutlined, FundViewOutlined } from '@ant-design/icons'
 import { Card, Tag } from 'antd'
 import FoodCategory from './FoodCategory'
 import logo from '../assets/logo.png'
 import PaymentConfirmationStatus from './PaymentConfirmationStatus'
+import ReportModal from './Report/ReportModal'
+import { getTransactionHistory } from '../helper'
 
 export default function TableList() {
   const [cafeTables, setCafeTables] = useState([
@@ -16,10 +18,10 @@ export default function TableList() {
   ])
 
   const [selectedTableId, setSelectedTableId] = useState(null)
-  const [transactions, setTransactions] = useState({})
+  const [transactions, setTransactions] = useState(getTransactionHistory() || {})
   const [paymentConfirmationStatus, setPaymentConfirmationStatus] = useState(false)
+  const [openReportModal, setOpenReportModal] = useState(false)
 
-  console.log('>>>>>>> TRANSACTIONS <<<<<<<<<<', { transactions })
   return (
     <>
       <h2
@@ -49,7 +51,7 @@ export default function TableList() {
           <div className="d-flex justify-content-end">
             <button
               onClick={() => {
-                // setPaymentConfirmationModal(true)
+                setOpenReportModal(true)
               }}
               className="btn d-flex summary-btn btn-primary"
               style={{ gap: '8px', minWidth: '80px' }}
@@ -85,6 +87,11 @@ export default function TableList() {
       <PaymentConfirmationStatus
         openModal={paymentConfirmationStatus}
         handleCancel={() => setPaymentConfirmationStatus(false)}
+      />
+      <ReportModal
+        openModal={openReportModal}
+        handleCancel={() => setOpenReportModal(false)}
+        transactions={transactions}
       />
     </>
   )

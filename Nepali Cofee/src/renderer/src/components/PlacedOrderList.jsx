@@ -1,16 +1,8 @@
-import React, { useRef } from 'react'
-import { useReactToPrint } from 'react-to-print'
+import React from 'react'
 import '../../src/styles.css'
 import { getTotalAmount } from '../helper'
 
 const PlacedOrderList = ({ orderSummary, setOrderSummary, viewOnly }) => {
-  const printRef = useRef(null)
-
-  const handlePrint = useReactToPrint({
-    contentRef: printRef, // Use contentRef correctly
-    documentTitle: 'customer-bill'
-  })
-
   const handleRemoveOrder = (id) => {
     setOrderSummary(
       (prevOrders) =>
@@ -32,7 +24,6 @@ const PlacedOrderList = ({ orderSummary, setOrderSummary, viewOnly }) => {
         >
           <thead style={{ borderBottom: '1px solid', fontSize: '12px' }}>
             <tr>
-              <th className="non-printable">Image</th>
               <th>Item</th>
               <th>Qty</th>
               <th>Price (Rs)</th>
@@ -45,10 +36,14 @@ const PlacedOrderList = ({ orderSummary, setOrderSummary, viewOnly }) => {
           <tbody>
             {orderSummary.map((item, index) => (
               <tr key={index} style={{ fontSize: '12px' }}>
-                <td className="non-printable">
-                  <img src={item.imgSrc} alt="coffee" className="coffee-icon" />
+                <td>
+                  <div className="d-flex align-items-center" style={{ gap: '4px' }}>
+                    <div className="non-printable">
+                      <img src={item.imgSrc} alt="coffee" className="coffee-icon" />
+                    </div>
+                    <div>{item.name}</div>
+                  </div>
                 </td>
-                <td>{item.name}</td>
                 <td>{item.quantity}</td>
                 <td>{item.price}</td>
                 {/* <td>{item.price * item.quantity}</td> */}

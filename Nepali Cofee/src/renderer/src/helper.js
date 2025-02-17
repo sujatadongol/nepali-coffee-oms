@@ -16,3 +16,10 @@ export const checkIfOrderIsPlaced = (cafeTables, selectedTableId) => {
 export const getTotalAmount = (orderList) => {
   return orderList.reduce((acc, item) => acc + item.price * item.quantity, 0)
 }
+
+export const getTransactionHistory = () => {
+  const transactionStr = localStorage.getItem('transactionHistory')
+  if (transactionStr) {
+    return JSON.parse(transactionStr)
+  }
+}
