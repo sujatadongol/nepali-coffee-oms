@@ -1,8 +1,7 @@
-import React, { useState } from "react";
-import ModalElement from "../elements/Modal";
-import PlacedOrderList from "../PlacedOrderList";
-import { getTotalAmount } from "../../helper";
-import { formatDateInReadableFormat } from "../../utils";
+import React, { useState } from 'react';
+import PlacedOrderList from "../../src/components/PlacedOrderList";
+import { getTotalAmount, getTransactionHistory } from "../../src/helper";
+import { formatDateInReadableFormat } from "../../src/utils";
 import {
   LineChart,
   Line,
@@ -12,35 +11,42 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import { useNavigate } from 'react-router-dom';
 
-const ReportModal = ({ openModal, handleCancel, transactions }) => {
-  const [selectedDate, setSelectedDate] = useState(null);
+const SalesReport = () => {
+      const [transactions, setTransactions] = useState(getTransactionHistory() || {})
+      const [selectedDate, setSelectedDate] = useState(null);
+    const navigate = useNavigate(); 
 
-  // Convert transactions into sales data for the graph
-  const salesData = Object.keys(transactions)
-    .map((date) => ({
-      date: formatDateInReadableFormat(date),
-      rawDate: date, 
-      sales: getTotalAmount(transactions[date]),
-    }))
-    .sort((a, b) => new Date(b.rawDate) - new Date(a.rawDate));
+      // Convert transactions into sales data for the graph
+      const salesData = Object.keys(transactions)
+        .map((date) => ({
+          date: formatDateInReadableFormat(date),
+          rawDate: date, 
+          sales: getTotalAmount(transactions[date]),
+        }))
+        .sort((a, b) => new Date(b.rawDate) - new Date(a.rawDate));
+    
+      // Filter transactions based on selected date
+      const filteredTransactions = selectedDate
+        ? { [selectedDate]: transactions[selectedDate] }
+        : transactions;
+    
+   
+    return(
+        <>
+        <div className="row text-end">
+            <div className="col">
+            <button onClick={()=> navigate('/') } className="btn summary-btn btn-outline-dark">
+                Back to Table
+            </button>
+            </div>
+        </div>
 
-  // Filter transactions based on selected date
-  const filteredTransactions = selectedDate
-    ? { [selectedDate]: transactions[selectedDate] }
-    : transactions;
-
-
-  return (
-    <ModalElement
-      width={750}
-      openModal={openModal}
-      handleCancel={handleCancel}
-      modalBody={
-        <div style={{ marginTop: "20px" }}>
+        <div  style={{ marginTop : '20px'}}>
           {/* Graph Section */}
           <h3 className="text-center">Daily Sales Overview</h3>
-          <ResponsiveContainer width="100%" height={300}>
+          <ResponsiveContainer width="80%" height={300} style={{ marginLeft : '150px'}} >
             <LineChart
               data={salesData}
               onClick={(e) => {
@@ -65,7 +71,7 @@ const ReportModal = ({ openModal, handleCancel, transactions }) => {
             <button
               onClick={() => setSelectedDate(null)}
               style={{
-                margin: "10px 0",
+                margin: "100px 150px 10px",
                 padding: "5px 10px",
                 backgroundColor: "#376af5",
                 color: "white",
@@ -78,7 +84,7 @@ const ReportModal = ({ openModal, handleCancel, transactions }) => {
           )}
 
           {/* Sales Table */}
-          <div>
+          <div style={{ width : '80%', marginLeft: '150px', marginTop: '20px'}} >
             {Object.keys(filteredTransactions).map((single) => (
               <div key={single}>
                 <div
@@ -103,9 +109,9 @@ const ReportModal = ({ openModal, handleCancel, transactions }) => {
             ))}
           </div>
         </div>
-      }
-    />
-  );
-};
 
-export default ReportModal;
+        </>
+    )
+}
+
+export default SalesReport;

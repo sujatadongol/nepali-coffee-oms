@@ -28,6 +28,15 @@ import iceFlavouredmachhiato from './assets/Iced Flavored Macchiato.jpeg'
 import blendedMocha from './assets/blendedmocha.jpeg'
 import blendedVanillaMocha from './assets/blendedValinaMocha.png'
 import flavouredBlendedMoha from './assets/floavredblendenMocha.jpeg'
+import cookies from './assets/cookies.jpeg'
+import choDanish from './assets/chodanish.jpeg'
+import chocoBun from './assets/chcobun.jpeg'
+import coconutBun from './assets/coconutbun.jpeg'
+import cinamonDonut from './assets/cinamondonut.jpeg'
+import miniLava from './assets/minilava.jpeg'
+import brownie from './assets/brownie.jpeg'
+import chicPattie from './assets/chickenpatties.jpeg'
+import paneerPattie from './assets/paneerpatties.jpeg'
 
 const coffeeCategories = [
   {
@@ -85,6 +94,23 @@ const coffeeCategories = [
       { id: "c31", name: "Blended Mocha", price: 285, imgSrc: blendedMocha },
       { id: "c32", name: "Blended Vanilla Mocha", price: 325, imgSrc: blendedVanillaMocha },
       { id: "c33", name: "Flavoured Blended Mocha", price: 325, imgSrc: flavouredBlendedMoha }
+    ]
+  },
+  {
+    key: "Bakery",
+    label: "Bakery",
+    items: [
+      {id: "c34", name:"Cookies", price: 150, imgSrc: cookies },
+      {id: "c35", name:"Cho Danish", price: 100, imgSrc: choDanish },
+      {id: "c36", name:"Choco Bun", price: 130, imgSrc: chocoBun },
+      {id: "c37", name:"Coconut Bun", price: 130, imgSrc: coconutBun },
+      {id: "c38", name:"Cinamon Donut", price: 80, imgSrc: cinamonDonut },
+      {id: "c39", name:"Mini Lava", price: 80, imgSrc: miniLava },
+      {id: "c40", name:"Nuts over Brownie", price: 110, imgSrc: brownie },
+      {id: "c41", name:"Chicken Patties", price: 135, imgSrc: chicPattie },
+      {id: "c42", name:"Paneer Patties", price: 130, imgSrc: paneerPattie },
+
+
     ]
   }
 ];

@@ -6,6 +6,7 @@ import '../../src/styles.css'
 import coffeeCategories from '../dataModel'
 import OrderSummary from './OrderSummary'
 import { getSelectedTableOrders } from '../helper'
+
 const { Meta } = Card
 
 const FoodCategory = ({

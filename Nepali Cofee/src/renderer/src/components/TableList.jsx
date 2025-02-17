@@ -6,6 +6,8 @@ import logo from '../assets/logo.png'
 import PaymentConfirmationStatus from './PaymentConfirmationStatus'
 import ReportModal from './Report/ReportModal'
 import { getTransactionHistory } from '../helper'
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
+
 
 export default function TableList() {
   const [cafeTables, setCafeTables] = useState([
@@ -20,7 +22,8 @@ export default function TableList() {
   const [selectedTableId, setSelectedTableId] = useState(null)
   const [transactions, setTransactions] = useState(getTransactionHistory() || {})
   const [paymentConfirmationStatus, setPaymentConfirmationStatus] = useState(false)
-  const [openReportModal, setOpenReportModal] = useState(false)
+  const [openReportModal, setOpenReportModal] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <>
@@ -51,7 +54,7 @@ export default function TableList() {
           <div className="d-flex justify-content-end">
             <button
               onClick={() => {
-                setOpenReportModal(true)
+                navigate('/salesreport');
               }}
               className="btn d-flex summary-btn btn-primary"
               style={{ gap: '8px', minWidth: '80px' }}
@@ -88,11 +91,11 @@ export default function TableList() {
         openModal={paymentConfirmationStatus}
         handleCancel={() => setPaymentConfirmationStatus(false)}
       />
-      <ReportModal
+      {/* <ReportModal
         openModal={openReportModal}
         handleCancel={() => setOpenReportModal(false)}
         transactions={transactions}
-      />
+      /> */}
     </>
   )
 }

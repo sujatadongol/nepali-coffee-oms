@@ -14,7 +14,6 @@ const PlacedOrderList = ({ orderSummary, setOrderSummary, viewOnly }) => {
 
   return (
     <>
-      {orderSummary.length > 0 && (
         <table
           style={{
             background: 'inherit',
@@ -34,36 +33,44 @@ const PlacedOrderList = ({ orderSummary, setOrderSummary, viewOnly }) => {
             </tr>
           </thead>
           <tbody>
-            {orderSummary.map((item, index) => (
-              <tr key={index} style={{ fontSize: '12px' }}>
-                <td>
-                  <div className="d-flex align-items-center" style={{ gap: '4px' }}>
-                    <div className="non-printable">
-                      <img src={item.imgSrc} alt="coffee" className="coffee-icon" />
-                    </div>
-                    <div>{item.name}</div>
-                  </div>
-                </td>
-                <td>{item.quantity}</td>
-                <td>{item.price}</td>
-                {/* <td>{item.price * item.quantity}</td> */}
-                <td className="non-printable" hidden={viewOnly}>
-                  <button
-                    className="btn btn-sm btn-dark"
-                    onClick={() => handleRemoveOrder(item.id)}
-                  >
-                    {' '}
-                    -{' '}
-                  </button>
-                </td>
-              </tr>
-            ))}
+          {orderSummary.length > 0 ? (
+      orderSummary.map((item, index) => (
+        <tr key={index} style={{ fontSize: '12px' }}>
+          <td>
+            <div className="d-flex align-items-center" style={{ gap: '6px' }}>
+              <div className="non-printable">
+                <img src={item.imgSrc} alt="coffee" className="coffee-icon" />
+              </div>
+              <div>{item.name}</div>
+            </div>
+          </td>
+          <td>{item.quantity}</td>
+          <td>{item.price}</td>
+          {/* <td>{item.price * item.quantity}</td> */}
+          <td className="non-printable" hidden={viewOnly}>
+            <button
+              className="btn btn-sm btn-dark"
+              onClick={() => handleRemoveOrder(item.id)}
+            >
+              {' '}
+              -{' '}
+            </button>
+          </td>
+        </tr>
+      ))
+    ) : (
+      <tr>
+        <td colSpan="4" style={{ textAlign: 'center', fontSize: '14px', color: 'gray' }}>
+          No data
+        </td>
+      </tr>
+    )}
           </tbody>
         </table>
-      )}
+    
       {!viewOnly && (
         <div className="text-end d-flex justify-content-between mt-4">
-          <small>
+          <small className='me-5'>
             <strong>Date:</strong>{' '}
             {new Date().toLocaleDateString('en-GB', {
               day: 'numeric',
@@ -71,9 +78,9 @@ const PlacedOrderList = ({ orderSummary, setOrderSummary, viewOnly }) => {
               year: 'numeric'
             })}
           </small>
-          <h6>
-            <strong>Grand Total: Rs {getTotalAmount(orderSummary)}</strong>
-          </h6>
+          <small>
+            <strong>Total: </strong> Rs {getTotalAmount(orderSummary)}
+          </small>
         </div>
       )}
     </>
