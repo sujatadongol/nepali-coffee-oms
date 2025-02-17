@@ -1,27 +1,29 @@
 import React, { useRef, useState } from 'react'
-import { PrinterOutlined, CreditCardOutlined, FileDoneOutlined } from '@ant-design/icons'
+import { PrinterOutlined, CreditCardOutlined } from '@ant-design/icons'
 import { useReactToPrint } from 'react-to-print'
 import logo from '../assets/logo.png'
 import '../../src/styles.css'
-import { checkIfOrderIsPlaced, getTotalAmount } from '../helper'
+import { checkIfOrderIsPlaced, getSelectedTableDetail, getTotalAmount } from '../helper'
 import PaymentConfirmationModal from './PaymentConfirmationModal'
 import { getFormattedDate } from '../utils'
+import PlacedOrderList from './PlacedOrderList'
 
 const OrderSummary = ({
-  table,
+  selectedTableId,
   cafeTables,
   setCafeTables,
   onBack,
   orderSummary,
   setOrderSummary,
   transactions,
-  setTransactions
+  setTransactions,
+  setPaymentConfirmationStatus
 }) => {
   const [paymentConfirmationModal, setPaymentConfirmationModal] = useState(false)
   const handleOrderPlacement = () => {
     setCafeTables((prevTables) =>
       prevTables.map((t) =>
-        t.id === table.id ? { ...t, available: false, orderItems: orderSummary } : t
+        t.id === selectedTableId ? { ...t, available: false, orderItems: orderSummary } : t
       )
     )
     // onBack()
@@ -30,7 +32,7 @@ const OrderSummary = ({
   const clearOrder = () => {
     setCafeTables((prevTables) =>
       prevTables.map((t) =>
-        t.id === table.id ? { ...t, available: true, hasPaid: false, orderItems: [] } : t
+        t.id === selectedTableId ? { ...t, available: true, orderItems: [] } : t
       )
     )
     setOrderSummary([])
@@ -63,39 +65,24 @@ const OrderSummary = ({
         }}
       >
         <div>
-          <h6>{table.name} - Order</h6>
+          <h6>{getSelectedTableDetail(cafeTables, selectedTableId)?.name} - Order</h6>
         </div>
         {orderSummary.length > 0 && (
           <div className="d-flex" style={{ gap: '10px' }}>
-            {console.log({ cafeTables, table })}
-            {orderSummary.hasPaid ? (
-              <button
-                onClick={() => {
-                  setPaymentConfirmationModal(true)
-                }}
-                className="btn d-flex summary-btn btn-success"
-                style={{ gap: '8px', minWidth: '80px' }}
-              >
-                <div>
-                  <FileDoneOutlined />
-                </div>{' '}
-                <div>Paid</div>
-              </button>
-            ) : (
-              <button
-                onClick={() => {
-                  setPaymentConfirmationModal(true)
-                }}
-                className="btn d-flex summary-btn btn-primary"
-                style={{ gap: '8px', minWidth: '80px' }}
-              >
-                <div>
-                  <CreditCardOutlined />
-                </div>{' '}
-                <div>Pay</div>
-              </button>
-            )}
-            {checkIfOrderIsPlaced(cafeTables, table) ? (
+            <button
+              onClick={() => {
+                setPaymentConfirmationModal(true)
+              }}
+              className="btn d-flex summary-btn btn-primary"
+              style={{ gap: '8px', minWidth: '80px' }}
+            >
+              <div>
+                <CreditCardOutlined />
+              </div>{' '}
+              <div>Pay</div>
+            </button>
+
+            {checkIfOrderIsPlaced(cafeTables, selectedTableId) ? (
               <button onClick={clearOrder} className="btn summary-btn btn-danger ">
                 Clear Order
               </button>
@@ -130,64 +117,7 @@ const OrderSummary = ({
           </div>
 
           {/* Order Summary */}
-          {orderSummary.length > 0 && (
-            <table
-              style={{
-                background: 'inherit',
-                width: '100%',
-                padding: '6px'
-              }}
-            >
-              <thead style={{ borderBottom: '1px solid', fontSize: '12px' }}>
-                <tr>
-                  <th className="non-printable">Image</th>
-                  <th>Item</th>
-                  <th>Qty</th>
-                  <th>Price (Rs)</th>
-                  {/* <th>Total (Rs)</th> */}
-                  <th className="non-printable">Remove</th>
-                </tr>
-              </thead>
-              <tbody>
-                {orderSummary.map((item, index) => (
-                  <tr key={index} style={{ fontSize: '12px' }}>
-                    <td className="non-printable">
-                      <img src={item.imgSrc} alt="coffee" className="coffee-icon" />
-                    </td>
-                    <td>{item.name}</td>
-                    <td>{item.quantity}</td>
-                    <td>{item.price}</td>
-                    {/* <td>{item.price * item.quantity}</td> */}
-                    <td className="non-printable">
-                      <button
-                        className="btn btn-sm btn-dark"
-                        onClick={() => handleRemoveOrder(item.id)}
-                      >
-                        {' '}
-                        -{' '}
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-          <div className="text-end d-flex justify-content-between mt-4">
-            <small>
-              <strong>Date:</strong>{' '}
-              {new Date().toLocaleDateString('en-GB', {
-                day: 'numeric',
-                month: 'short',
-                year: 'numeric'
-              })}
-            </small>
-            <h6>
-              <strong>Grand Total: Rs {getTotalAmount(orderSummary)}</strong>
-            </h6>
-          </div>
-          <p className="text-muted text-center" style={{ paddingBottom: '14px' }}>
-            Thank you for your purchase!
-          </p>
+          <PlacedOrderList orderSummary={orderSummary} setOrderSummary={setOrderSummary} />
         </div>
       </div>
 
@@ -195,6 +125,8 @@ const OrderSummary = ({
         openModal={paymentConfirmationModal}
         handleCancel={() => setPaymentConfirmationModal(false)}
         paymentAmount={getTotalAmount(orderSummary)}
+        orderSummary={orderSummary}
+        setOrderSummary={setOrderSummary}
         handleOk={() => {
           const paidOrders = { ...transactions }
           if (paidOrders[getFormattedDate()]) {
@@ -204,10 +136,9 @@ const OrderSummary = ({
           }
           setTransactions(paidOrders)
           setPaymentConfirmationModal(false)
-          setCafeTables((prevTables) =>
-            prevTables.map((t) => (t.id === table.id ? { ...t, hasPaid: true } : t))
-          )
-          setOrderSummary({ ...prevOrders, hasPaid: true })
+          setPaymentConfirmationStatus(true)
+          clearOrder()
+          onBack()
         }}
       />
     </>

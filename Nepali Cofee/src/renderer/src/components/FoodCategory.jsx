@@ -1,21 +1,25 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Card, Button, InputNumber } from 'antd'
 import { PlusOutlined, MinusOutlined } from '@ant-design/icons'
 import coffeeImage from '../assets/coffee.png'
 import '../../src/styles.css'
 import coffeeCategories from '../dataModel'
 import OrderSummary from './OrderSummary'
+import { getSelectedTableOrders } from '../helper'
 const { Meta } = Card
 
 const FoodCategory = ({
-  table,
+  selectedTableId,
   cafeTables,
   setCafeTables,
   onBack,
   transactions,
-  setTransactions
+  setTransactions,
+  setPaymentConfirmationStatus
 }) => {
-  const [orderSummary, setOrderSummary] = useState(table.orderItems || [])
+  const [orderSummary, setOrderSummary] = useState(
+    getSelectedTableOrders(cafeTables, selectedTableId) || []
+  )
   const [selectedCategory, setSelectedCategory] = useState('Black Coffee')
   const [quantities, setQuantities] = useState({})
 
@@ -40,17 +44,9 @@ const FoodCategory = ({
     })
   }
 
-  // useEffect(() => {
-  //   const selectedTable = cafeTables?.filter((single) => table.id === single.id)
-  //   if (selectedTable && selectedTable[0]) {
-  //     setOrderSummary(selectedTable[0])
-  //   }
-  // }, [cafeTables])
-
   return (
     <>
       {/* Coffee Theme Styles */}
-
       <div className="row text-end ">
         <div className="col">
           <button onClick={handleBack} className="btn summary-btn btn-outline-dark">
@@ -157,7 +153,7 @@ const FoodCategory = ({
 
         <div className="col-12 col-xs-12 col-md-4 col-lg-4">
           <OrderSummary
-            table={table}
+            selectedTableId={selectedTableId}
             cafeTables={cafeTables}
             setCafeTables={setCafeTables}
             onBack={onBack}
@@ -165,6 +161,7 @@ const FoodCategory = ({
             setOrderSummary={setOrderSummary}
             transactions={transactions}
             setTransactions={setTransactions}
+            setPaymentConfirmationStatus={setPaymentConfirmationStatus}
           />
         </div>
       </div>

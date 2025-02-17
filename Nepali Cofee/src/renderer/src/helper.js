@@ -1,9 +1,16 @@
-export const getSelectedTableOrders = (cafeTables, selectedTable) => {
-  return cafeTables?.filter((single) => single.id === selectedTable?.id)
+export const getSelectedTableDetail = (cafeTables, selectedTableId) => {
+  return (
+    cafeTables?.filter((single) => single.id === selectedTableId) &&
+    cafeTables?.filter((single) => single.id === selectedTableId)[0]
+  )
 }
 
-export const checkIfOrderIsPlaced = (cafeTables, selectedTable) => {
-  return getSelectedTableOrders(cafeTables, selectedTable)[0]?.orderItems?.length > 0
+export const getSelectedTableOrders = (cafeTables, selectedTableId) => {
+  return getSelectedTableDetail(cafeTables, selectedTableId)?.orderItems
+}
+
+export const checkIfOrderIsPlaced = (cafeTables, selectedTableId) => {
+  return getSelectedTableOrders(cafeTables, selectedTableId)?.length > 0
 }
 
 export const getTotalAmount = (orderList) => {

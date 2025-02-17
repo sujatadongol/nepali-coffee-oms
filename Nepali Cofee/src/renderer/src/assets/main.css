@@ -154,3 +154,7 @@ code {
     display: none;
   }
 }
+
+.ant-modal-content {
+  padding: 0;
+}

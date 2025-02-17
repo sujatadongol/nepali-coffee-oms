@@ -3,6 +3,7 @@ import { UserOutlined, FundViewOutlined } from '@ant-design/icons'
 import { Card, Tag } from 'antd'
 import FoodCategory from './FoodCategory'
 import logo from '../assets/logo.png'
+import PaymentConfirmationStatus from './PaymentConfirmationStatus'
 
 export default function TableList() {
   const [cafeTables, setCafeTables] = useState([
@@ -14,10 +15,11 @@ export default function TableList() {
     { id: 6, name: 'Table 6', capacity: 0, available: true, orderItems: [], hasPaid: false }
   ])
 
-  const [selectedTable, setSelectedTable] = useState(null)
+  const [selectedTableId, setSelectedTableId] = useState(null)
   const [transactions, setTransactions] = useState({})
+  const [paymentConfirmationStatus, setPaymentConfirmationStatus] = useState(false)
 
-  console.log('>>>>>>>', { cafeTables, selectedTable, transactions })
+  console.log('>>>>>>> TRANSACTIONS <<<<<<<<<<', { transactions })
   return (
     <>
       <h2
@@ -32,21 +34,22 @@ export default function TableList() {
         <img src={logo} style={{ width: '60px', objectFit: 'contain' }} alt="logo" /> Nepali Coffee
       </h2>
 
-      {selectedTable ? (
+      {selectedTableId ? (
         <FoodCategory
-          table={selectedTable}
+          selectedTableId={selectedTableId}
           cafeTables={cafeTables}
           setCafeTables={setCafeTables}
-          onBack={() => setSelectedTable(null)}
+          onBack={() => setSelectedTableId(null)}
           transactions={transactions}
           setTransactions={setTransactions}
+          setPaymentConfirmationStatus={setPaymentConfirmationStatus}
         />
       ) : (
         <>
           <div className="d-flex justify-content-end">
             <button
               onClick={() => {
-                setPaymentConfirmationModal(true)
+                // setPaymentConfirmationModal(true)
               }}
               className="btn d-flex summary-btn btn-primary"
               style={{ gap: '8px', minWidth: '80px' }}
@@ -65,11 +68,10 @@ export default function TableList() {
                 hoverable
                 headStyle={{ background: '#d8cfc66b' }}
                 style={{ width: '48%', textAlign: 'center' }}
-                onClick={() => setSelectedTable(item)}
+                onClick={() => setSelectedTableId(item.id)}
               >
                 <p>
                   <UserOutlined />
-                  {/* <strong>{item.capacity}</strong> */}
                 </p>
                 <Tag color={item.available ? 'green' : 'red'}>
                   {item.available ? 'Available' : 'Occupied'}
@@ -79,6 +81,11 @@ export default function TableList() {
           </div>
         </>
       )}
+
+      <PaymentConfirmationStatus
+        openModal={paymentConfirmationStatus}
+        handleCancel={() => setPaymentConfirmationStatus(false)}
+      />
     </>
   )
 }
