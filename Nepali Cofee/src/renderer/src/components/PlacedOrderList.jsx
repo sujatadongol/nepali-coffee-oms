@@ -40,7 +40,7 @@ const PlacedOrderList = ({ orderSummary, setOrderSummary, viewOnly }) => {
           <td>
             <div className="d-flex align-items-center" style={{ gap: '6px' }}>
               <div className="non-printable">
-                <img src={item.imgSrc} alt="coffee" className="coffee-icon" />
+                <img src={item.imgSrc} alt="coffee image" className="coffee-icon" />
               </div>
               <div>{item.name}</div>
             </div>

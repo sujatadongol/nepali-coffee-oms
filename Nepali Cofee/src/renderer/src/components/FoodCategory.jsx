@@ -84,7 +84,7 @@ const FoodCategory = ({
                     cover={
                       <img
                         className="food-image"
-                        alt={food.name}
+                        alt="coffee image"
                         src={food.imgSrc ? food.imgSrc : coffeeImage}
                       />
                     }

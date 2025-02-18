@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { HashRouter as Router, Route, Routes } from 'react-router-dom';
 import TableList from './components/TableList'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import SalesReport from './components/SalesReport'
