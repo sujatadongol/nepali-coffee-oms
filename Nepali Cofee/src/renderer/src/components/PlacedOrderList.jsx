@@ -26,8 +26,8 @@ const PlacedOrderList = ({ orderSummary, setOrderSummary, viewOnly }) => {
             <tr>
               <th>Item</th>
               <th>Qty</th>
-              <th>Price (Rs)</th>
-              {/* <th>Total (Rs)</th> */}
+              <th>Price</th>
+              <th>Amount</th>
               <th className="non-printable" hidden={viewOnly}>
                 Remove
               </th>
@@ -47,7 +47,7 @@ const PlacedOrderList = ({ orderSummary, setOrderSummary, viewOnly }) => {
           </td>
           <td>{item.quantity}</td>
           <td>{item.price}</td>
-          {/* <td>{item.price * item.quantity}</td> */}
+          <td>{item.quantity * item.price}</td>
           <td className="non-printable" hidden={viewOnly}>
             <button
               className="btn btn-sm btn-dark"
