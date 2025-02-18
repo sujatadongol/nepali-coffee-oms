@@ -18,7 +18,8 @@ const PlacedOrderList = ({ orderSummary, setOrderSummary, viewOnly }) => {
           style={{
             background: 'inherit',
             width: '100%',
-            padding: '6px'
+            padding: '6px',
+            margin: '20px 0'
           }}
         >
           <thead style={{ borderBottom: '1px solid', fontSize: '12px' }}>
@@ -60,7 +61,7 @@ const PlacedOrderList = ({ orderSummary, setOrderSummary, viewOnly }) => {
       ))
     ) : (
       <tr>
-        <td colSpan="4" style={{ textAlign: 'center', fontSize: '14px', color: 'gray' }}>
+        <td colSpan="4" style={{ textAlign: 'center', padding: '50px 0', fontSize: '14px'}}>
           No data
         </td>
       </tr>
