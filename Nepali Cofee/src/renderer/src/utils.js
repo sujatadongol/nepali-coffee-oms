@@ -7,8 +7,8 @@ function getDayMonthYear(dateValue = new Date()) {
 }
 
 export function getFormattedDate() {
-  const { day, month, year } = getDayMonthYear()
-  return `${day}/${month}/${year}`
+  const { day, month, year } = getDayMonthYear();
+  return `${day}/${month}/${year}`;
 
   // return `18/02/2025`
 }
