@@ -1,0 +1,14 @@
+.order-wrapper {
+  border: 1px solid #f0f0f0;
+  margin: 10px 0;
+  border-radius: 8px;
+  overflow: hidden;
+
+  .order-header {
+    background: #f0f0f0;
+    padding: 10px;
+  }
+  .order-list-wrapper {
+    padding: 10px;
+  }
+}

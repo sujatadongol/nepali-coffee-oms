@@ -94,3 +94,9 @@
   text-align: center !important;
   padding-bottom: 10px !important;
 }
+
+.orderId,
+.total-amount {
+  color: #376af5;
+  font-weight: 600;
+}

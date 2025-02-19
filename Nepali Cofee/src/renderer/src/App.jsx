@@ -1,17 +1,17 @@
-import { HashRouter as Router, Route, Routes } from 'react-router-dom';
+import { HashRouter as Router, Route, Routes } from 'react-router-dom'
 import TableList from './components/TableList'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import SalesReport from './components/SalesReport'
+import SalesReport from './components/Report/SalesReport'
 
 function App() {
   return (
     <Router>
-    <Routes>
-      <Route path="/" element={<TableList />} />
-      <Route path="/salesreport" element={<SalesReport />} />
-      {/* Add other routes here */}
-    </Routes>
-  </Router>
+      <Routes>
+        <Route path="/" element={<TableList />} />
+        <Route path="/salesreport" element={<SalesReport />} />
+        {/* Add other routes here */}
+      </Routes>
+    </Router>
   )
 }
 

@@ -26,6 +26,29 @@ export const getTransactionHistory = () => {
 
 export const getOrdersWithOrderId = (initialOrders, orderId) => {
   return initialOrders?.map((single) => {
-    return { ...single, orderId }
+    return { ...single, orderId, createdAt: new Date().getTime() }
   })
+}
+
+export function getOrderIdAndTotals(data) {
+  const orderMap = new Map()
+
+  data.forEach((item) => {
+    if (orderMap.has(item.orderId)) {
+      let existingOrder = orderMap.get(item.orderId)
+      existingOrder.total += item.price * item.quantity
+    } else {
+      orderMap.set(item.orderId, {
+        orderId: item.orderId,
+        total: item.price * item.quantity,
+        createdAt: item.createdAt
+      })
+    }
+  })
+
+  return Array.from(orderMap.values())
+}
+
+export function getOrderById(data, orderId) {
+  return data.filter((item) => item.orderId === orderId)
 }
