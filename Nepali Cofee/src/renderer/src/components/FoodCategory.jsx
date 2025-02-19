@@ -16,7 +16,8 @@ const FoodCategory = ({
   onBack,
   transactions,
   setTransactions,
-  setPaymentConfirmationStatus
+  setPaymentConfirmationStatus,
+  selectedTableOrderId
 }) => {
   const [orderSummary, setOrderSummary] = useState(
     getSelectedTableOrders(cafeTables, selectedTableId) || []
@@ -163,6 +164,7 @@ const FoodCategory = ({
             transactions={transactions}
             setTransactions={setTransactions}
             setPaymentConfirmationStatus={setPaymentConfirmationStatus}
+            selectedTableOrderId={selectedTableOrderId}
           />
         </div>
       </div>

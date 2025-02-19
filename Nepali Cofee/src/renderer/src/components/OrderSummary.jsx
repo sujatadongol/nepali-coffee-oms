@@ -3,7 +3,12 @@ import { PrinterOutlined, CreditCardOutlined } from '@ant-design/icons'
 import { useReactToPrint } from 'react-to-print'
 import logo from '../assets/logo.png'
 import '../../src/styles.css'
-import { checkIfOrderIsPlaced, getSelectedTableDetail, getTotalAmount } from '../helper'
+import {
+  checkIfOrderIsPlaced,
+  getOrdersWithOrderId,
+  getSelectedTableDetail,
+  getTotalAmount
+} from '../helper'
 import PaymentConfirmationModal from './PaymentConfirmationModal'
 import { getFormattedDate } from '../utils'
 import PlacedOrderList from './PlacedOrderList'
@@ -17,7 +22,8 @@ const OrderSummary = ({
   setOrderSummary,
   transactions,
   setTransactions,
-  setPaymentConfirmationStatus
+  setPaymentConfirmationStatus,
+  selectedTableOrderId
 }) => {
   const [paymentConfirmationModal, setPaymentConfirmationModal] = useState(false)
   const handleOrderPlacement = () => {
@@ -56,7 +62,10 @@ const OrderSummary = ({
         }}
       >
         <div>
-          <h6>{getSelectedTableDetail(cafeTables, selectedTableId)?.name} - Order</h6>
+          <h6>
+            {getSelectedTableDetail(cafeTables, selectedTableId)?.name} - Order:
+            {selectedTableOrderId}
+          </h6>
         </div>
         {orderSummary.length > 0 && (
           <div className="d-flex" style={{ gap: '10px' }}>
@@ -121,9 +130,14 @@ const OrderSummary = ({
         handleOk={() => {
           const paidOrders = { ...transactions }
           if (paidOrders[getFormattedDate()]) {
-            paidOrders[getFormattedDate()] = [...paidOrders[getFormattedDate()], ...orderSummary]
+            paidOrders[getFormattedDate()] = [
+              ...paidOrders[getFormattedDate()],
+              ...getOrdersWithOrderId(orderSummary, selectedTableOrderId)
+            ]
           } else {
-            paidOrders[getFormattedDate()] = [...orderSummary]
+            paidOrders[getFormattedDate()] = [
+              ...getOrdersWithOrderId(orderSummary, selectedTableOrderId)
+            ]
           }
           setTransactions(paidOrders)
           localStorage.setItem('transactionHistory', JSON.stringify(paidOrders))

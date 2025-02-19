@@ -7,8 +7,8 @@ function getDayMonthYear(dateValue = new Date()) {
 }
 
 export function getFormattedDate() {
-  const { day, month, year } = getDayMonthYear();
-  return `${day}/${month}/${year}`;
+  const { day, month, year } = getDayMonthYear()
+  return `${day}/${month}/${year}`
 
   // return `18/02/2025`
 }
@@ -19,4 +19,16 @@ export function formatDateInReadableFormat(dateStr) {
   const options = { day: 'numeric', month: 'short', year: 'numeric' }
 
   return date.toLocaleDateString('en-GB', options).replace(',', '')
+}
+
+export function generateOrderId() {
+  const randomNum = Math.floor(1000 + Math.random() * 9000) // Generate a 4-digit random number
+  const now = new Date()
+
+  const dateTime = now
+    .toISOString()
+    .replace(/[-T:.Z]/g, '')
+    .slice(0, 12) // Format: YYYYMMDDHHMM
+
+  return `#${randomNum}-${dateTime}`
 }

@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { UserOutlined, FundViewOutlined } from '@ant-design/icons'
 import { Card, Tag } from 'antd'
 import FoodCategory from './FoodCategory'
 import logo from '../assets/logo.png'
 import PaymentConfirmationStatus from './PaymentConfirmationStatus'
-import ReportModal from './Report/ReportModal'
 import { getTransactionHistory } from '../helper'
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
-
+import { useNavigate } from 'react-router-dom' // Import useNavigate
+import { generateOrderId } from '../utils'
 
 export default function TableList() {
   const [cafeTables, setCafeTables] = useState([
@@ -20,10 +19,10 @@ export default function TableList() {
   ])
 
   const [selectedTableId, setSelectedTableId] = useState(null)
+  const [selectedTableOrderId, setSelectedTableOrderId] = useState(null)
   const [transactions, setTransactions] = useState(getTransactionHistory() || {})
   const [paymentConfirmationStatus, setPaymentConfirmationStatus] = useState(false)
-  const [openReportModal, setOpenReportModal] = useState(false);
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   return (
     <>
@@ -48,13 +47,14 @@ export default function TableList() {
           transactions={transactions}
           setTransactions={setTransactions}
           setPaymentConfirmationStatus={setPaymentConfirmationStatus}
+          selectedTableOrderId={selectedTableOrderId}
         />
       ) : (
         <>
           <div className="d-flex justify-content-end">
             <button
               onClick={() => {
-                navigate('/salesreport');
+                navigate('/salesreport')
               }}
               className="btn d-flex summary-btn btn-primary"
               style={{ gap: '8px', minWidth: '80px' }}
@@ -73,7 +73,10 @@ export default function TableList() {
                 hoverable
                 headStyle={{ background: '#d8cfc66b' }}
                 style={{ width: '48%', textAlign: 'center' }}
-                onClick={() => setSelectedTableId(item.id)}
+                onClick={() => {
+                  setSelectedTableId(item.id)
+                  setSelectedTableOrderId(generateOrderId())
+                }}
               >
                 <p>
                   <UserOutlined />

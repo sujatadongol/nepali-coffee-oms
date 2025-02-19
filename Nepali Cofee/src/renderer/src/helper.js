@@ -14,7 +14,7 @@ export const checkIfOrderIsPlaced = (cafeTables, selectedTableId) => {
 }
 
 export const getTotalAmount = (orderList) => {
-  return orderList.reduce((acc, item) => acc + item.price * item.quantity, 0)
+  return orderList?.reduce((acc, item) => acc + item.price * item.quantity, 0)
 }
 
 export const getTransactionHistory = () => {
@@ -22,4 +22,10 @@ export const getTransactionHistory = () => {
   if (transactionStr) {
     return JSON.parse(transactionStr)
   }
+}
+
+export const getOrdersWithOrderId = (initialOrders, orderId) => {
+  return initialOrders?.map((single) => {
+    return { ...single, orderId }
+  })
 }
