@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import PlacedOrderList from '../PlacedOrderList'
 import {
   getOrderById,
@@ -18,11 +18,15 @@ import {
 } from 'recharts'
 import { useNavigate } from 'react-router-dom'
 import OrderView from './OrderView'
+import { useReactToPrint } from 'react-to-print'
+import { PrinterOutlined } from '@ant-design/icons'
+
 
 const SalesReport = () => {
   const [transactions, setTransactions] = useState(getTransactionHistory() || {})
   const [selectedDate, setSelectedDate] = useState(null)
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const printRef = useRef(null);
 
   // Convert transactions into sales data for the graph
   const salesData = Object.keys(transactions)
@@ -38,6 +42,11 @@ const SalesReport = () => {
     ? { [selectedDate]: transactions[selectedDate] }
     : transactions
 
+    const handlePrint = useReactToPrint({
+        contentRef: printRef,
+        documentTitle: "customer-bill"
+      });
+
   return (
     <>
       <div className="row text-end">
@@ -51,7 +60,7 @@ const SalesReport = () => {
       <div style={{ marginTop: '20px' }}>
         {/* Graph Section */}
         <h3 className="text-center">Daily Sales Overview</h3>
-        <ResponsiveContainer width="80%" height={300} style={{ marginLeft: '150px' }}>
+        <ResponsiveContainer width="85%" height={300} style={{ marginLeft: '100px' }}>
           <LineChart
             data={salesData}
             onClick={(e) => {
@@ -71,12 +80,13 @@ const SalesReport = () => {
           </LineChart>
         </ResponsiveContainer>
 
-        {/* Reset Button */}
-        {selectedDate && (
+    <div className="row justify-content-between align-items-center" style={{ margin: '100px 100px 10px'}}>
+      <div className="col">
+      {selectedDate && (
           <button
+          className='btn btn-primary'
             onClick={() => setSelectedDate(null)}
             style={{
-              margin: '100px 150px 10px',
               padding: '5px 10px',
               backgroundColor: '#376af5',
               color: 'white',
@@ -87,9 +97,17 @@ const SalesReport = () => {
             Show All Sales
           </button>
         )}
+      </div>
+        <div className="col text-end">
+          <button onClick={handlePrint} className="ms-1 btn summary-btn btn-outline-primary">
+          <PrinterOutlined />
+          <span className='mx-1'>Print</span>
+          </button>
+        </div>
+      </div>
 
         {/* Sales Table */}
-        <div style={{ width: '80%', marginLeft: '150px', marginTop: '20px' }}>
+        <div ref={printRef} style={{ width: '85%', marginLeft: '100px', marginTop: '20px' }} >
           {Object.keys(filteredTransactions).map((single) => (
             <div key={single}>
               <div className="d-flex justify-content-between" style={{ paddingTop: '15px' }}>

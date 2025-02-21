@@ -1,4 +1,4 @@
-# nepali-cofee
+# Nepali Coffee
 
 An Electron application with React
 

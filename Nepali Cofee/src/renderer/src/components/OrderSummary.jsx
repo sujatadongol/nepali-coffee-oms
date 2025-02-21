@@ -45,30 +45,23 @@ const OrderSummary = ({
     // onBack()
   }
 
-  const printRef = useRef(null)
+  const printRef = useRef(null);
 
   const handlePrint = useReactToPrint({
-    contentRef: printRef, // Use contentRef correctly
-    documentTitle: 'customer-bill'
-  })
+    contentRef: printRef,
+    documentTitle: "customer-bill"
+  });
+  
 
   return (
     <>
-      <div
-        className="d-flex"
-        style={{
-          justifyContent: 'space-between',
-          paddingBottom: '10px'
-        }}
-      >
-        <div>
-          <h6>
-            {getSelectedTableDetail(cafeTables, selectedTableId)?.name} - Order:
-            {selectedTableOrderId}
-          </h6>
-        </div>
-        {orderSummary.length > 0 && (
-          <div className="d-flex" style={{ gap: '10px' }}>
+     <div className='row'>
+      <div className="col">
+      <h6>{getSelectedTableDetail(cafeTables, selectedTableId)?.name} </h6>
+      <p>Order {selectedTableOrderId}</p>
+      </div>
+      {orderSummary.length > 0 && (
+          <div className="col d-flex" style={{ gap: '10px' }}>
             <button
               onClick={() => {
                 setPaymentConfirmationModal(true)
@@ -101,6 +94,7 @@ const OrderSummary = ({
           </div>
         )}
       </div>
+     
       <div
         style={{
           background: '#d8cfc66b',
@@ -110,9 +104,9 @@ const OrderSummary = ({
       >
         <div className="invoice" ref={printRef}>
           <div className="text-center">
-            <div className="d-flex justify-content-center align-items-center gap-2">
+            <div className="d-flex justify-content-center align-items-center gap-2 pt-3">
               <img src={logo} style={{ width: '30px', objectFit: 'contain' }} alt="logo" />
-              <h5>Nepali Coffee</h5>
+              <h5>NEPALI COFFEE</h5>
             </div>
           </div>
 
