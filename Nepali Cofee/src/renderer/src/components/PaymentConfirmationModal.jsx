@@ -1,7 +1,7 @@
-import React from 'react'
-import ModalElement from './elements/Modal'
-import { CreditCardOutlined } from '@ant-design/icons'
-import PlacedOrderList from './PlacedOrderList'
+import React from 'react';
+import ModalElement from './elements/Modal';
+import PlacedOrderList from './PlacedOrderList';
+import qr from '../assets/qr.jpg';
 
 const PaymentConfirmationModal = ({
   openModal,
@@ -18,38 +18,113 @@ const PaymentConfirmationModal = ({
       handleCancel={handleCancel}
       modalBody={
         <div className="row">
+          {/* Left Section: Order Summary */}
           <div
             className="col-6"
             style={{
-              borderRight: '1px solid',
+              borderRight: '1px solid #ddd',
               display: 'flex',
               flexDirection: 'column',
-              justifyContent: 'center'
+              padding: '15px',
             }}
           >
+            <h5 style={{ textAlign: 'center', marginBottom: '10px', fontWeight: '600' }}>
+              Order Summary
+            </h5>
             <PlacedOrderList
               orderSummary={orderSummary}
               setOrderSummary={setOrderSummary}
               viewOnly
             />
           </div>
+
+          {/* Right Section: QR Code & Payment */}
           <div
             className="col-6"
             style={{
               padding: '15px',
               display: 'flex',
               flexDirection: 'column',
-              justifyContent: 'center'
+              justifyContent: 'center',
+              alignItems: 'center',
             }}
           >
-            <div style={{ textAlign: 'center', marginBottom: '20px' }}>
-              <CreditCardOutlined style={{ fontSize: '48px', color: '#b4b4b4' }} />
+            {/* QR Code Section */}
+            <div
+              style={{
+                textAlign: 'center',
+                marginBottom: '20px',
+                position: 'relative',
+                padding: '15px',
+                borderRadius: '12px',
+                display: 'inline-block',
+              }}
+            >
+              {/* Corner Borders */}
+              <div
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '15px',
+                  height: '15px',
+                  borderTop: '3px solid #c89f77',
+                  borderLeft: '3px solid #c89f77',
+                  borderRadius: '8px 0 0 0',
+                }}
+              ></div>
+              <div
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  right: 0,
+                  width: '15px',
+                  height: '15px',
+                  borderTop: '3px solid #c89f77',
+                  borderRight: '3px solid #c89f77',
+                  borderRadius: '0 8px 0 0',
+                }}
+              ></div>
+              <div
+                style={{
+                  position: 'absolute',
+                  bottom: 0,
+                  left: 0,
+                  width: '15px',
+                  height: '15px',
+                  borderBottom: '3px solid #c89f77',
+                  borderLeft: '3px solid #c89f77',
+                  borderRadius: '0 0 0 8px',
+                }}
+              ></div>
+              <div
+                style={{
+                  position: 'absolute',
+                  bottom: 0,
+                  right: 0,
+                  width: '15px',
+                  height: '15px',
+                  borderBottom: '3px solid #c89f77',
+                  borderRight: '3px solid #c89f77',
+                  borderRadius: '0 0 8px 0',
+                }}
+              ></div>
+
+              {/* QR Code */}
+              <img src={qr} alt="QR Code" style={{ width: '200px', borderRadius: '8px' }} />
+
+              {/* Label */}
+              <p style={{ marginTop: '10px', fontWeight: 'bold', color: '#333', fontSize: '16px' }}>
+                  Scan to Pay via <span style={{ color: '#d81b60' }}>FonePay</span> App
+                </p>
             </div>
+
+            {/* Payment Amount */}
             <div
               className="d-flex justify-content-center align-items-center"
               style={{ fontSize: '24px', marginBottom: '10px' }}
             >
-              Your total is{' '}
+               Your total is{' '}
               <span
                 style={{ color: '#376af5', marginLeft: '4px', fontWeight: 600, fontSize: '28px' }}
               >
@@ -57,9 +132,12 @@ const PaymentConfirmationModal = ({
               </span>
             </div>
 
+            {/* Confirmation Buttons */}
             <div className="d-flex justify-content-center" style={{ flexDirection: 'column' }}>
-              <div>Are you sure you want to confirm the payment?</div>
-              <div className="d-flex justify-content-center" style={{ marginTop: '10px' }}>
+              <p style={{ textAlign: 'center', fontSize: '16px', marginBottom: '10px' }}>
+                Are you sure you want to confirm the payment?
+              </p>
+              <div className="d-flex justify-content-center" style={{ marginTop: '5px' }}>
                 <button
                   onClick={() => {
                     handleOk(true)
@@ -85,7 +163,7 @@ const PaymentConfirmationModal = ({
         </div>
       }
     />
-  )
-}
+  );
+};
 
-export default PaymentConfirmationModal
+export default PaymentConfirmationModal;

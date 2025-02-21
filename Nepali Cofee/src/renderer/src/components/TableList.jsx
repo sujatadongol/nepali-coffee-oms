@@ -35,7 +35,8 @@ export default function TableList() {
           marginBottom: '2rem'
         }}
       >
-        <img src={logo} style={{ width: '60px', objectFit: 'contain' }} alt="logo" /> Nepali Coffee
+        <img src={logo} style={{ width: '60px', objectFit: 'contain' }} alt="logo" /> NEPALI COFFEE
+
       </h2>
 
       {selectedTableId ? (
