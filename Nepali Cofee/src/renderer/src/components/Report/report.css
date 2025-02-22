@@ -5,10 +5,18 @@
   overflow: hidden;
 
   .order-header {
-    background: #f0f0f0;
+    background: #d8cfc66b;
     padding: 10px;
   }
   .order-list-wrapper {
     padding: 10px;
   }
+}
+
+.line-graph-wrapper {
+  background: #d8cfc66b;
+  border-radius: 8px;
+  padding: 20px;
+  width: 100%;
+  margin-bottom: 20px;
 }

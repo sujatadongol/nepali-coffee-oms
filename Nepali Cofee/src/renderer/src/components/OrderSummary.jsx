@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react'
-import { PrinterOutlined, CreditCardOutlined } from '@ant-design/icons'
+import { CreditCardOutlined } from '@ant-design/icons'
 import { useReactToPrint } from 'react-to-print'
 import logo from '../assets/logo.png'
 import '../../src/styles.css'
@@ -12,6 +12,7 @@ import {
 import PaymentConfirmationModal from './PaymentConfirmationModal'
 import { getFormattedDate } from '../utils'
 import PlacedOrderList from './PlacedOrderList'
+import { PrintButton } from './elements/PrintButton'
 
 const OrderSummary = ({
   selectedTableId,
@@ -82,13 +83,7 @@ const OrderSummary = ({
                 Place Order
               </button>
             )}
-            <button
-              className="btn btn-sm summary-btn btn-outline-dark"
-              onClick={handlePrint}
-              style={{ width: '34px' }}
-            >
-              <PrinterOutlined />
-            </button>
+            <PrintButton handlePrint={handlePrint} />
           </div>
         )}
       </div>

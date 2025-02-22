@@ -15,7 +15,7 @@ const PlacedOrderList = ({ orderSummary, setOrderSummary, orderId, viewOnly }) =
 
   return (
     <>
-      <div className="order-id">Order {orderId}</div>
+      {orderId && <div className="order-id">Order {orderId}</div>}
 
       <table
         style={{
