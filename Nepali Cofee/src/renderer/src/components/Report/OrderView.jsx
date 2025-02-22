@@ -6,10 +6,7 @@ const OrderView = ({ orderDetail, filteredOrders }) => {
   return (
     <div className="order-wrapper">
       <div className="d-flex justify-content-between order-header">
-        <div className="d-flex">
-          Order:
-          <div className="orderId">{orderDetail.orderId}</div>
-        </div>
+        <div className="d-flex order-id">Order {orderDetail.orderId}</div>
         <div className="d-flex">
           Total: <div className="total-amount">{orderDetail.total}</div>
         </div>

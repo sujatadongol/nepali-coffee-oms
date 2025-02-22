@@ -45,23 +45,21 @@ const OrderSummary = ({
     // onBack()
   }
 
-  const printRef = useRef(null);
+  const printRef = useRef(null)
 
   const handlePrint = useReactToPrint({
     contentRef: printRef,
-    documentTitle: "customer-bill"
-  });
-  
+    documentTitle: 'customer-bill'
+  })
 
   return (
     <>
-     <div className='row'>
-      <div className="col">
-      <h6>{getSelectedTableDetail(cafeTables, selectedTableId)?.name} </h6>
-      <p>Order {selectedTableOrderId}</p>
-      </div>
-      {orderSummary.length > 0 && (
-          <div className="col d-flex" style={{ gap: '10px' }}>
+      <div className="d-flex justify-content-between" style={{ marginBottom: '10px' }}>
+        <h5 className="d-flex table-header">
+          {getSelectedTableDetail(cafeTables, selectedTableId)?.name}
+        </h5>
+        {orderSummary.length > 0 && (
+          <div className="d-flex" style={{ gap: '10px' }}>
             <button
               onClick={() => {
                 setPaymentConfirmationModal(true)
@@ -94,7 +92,7 @@ const OrderSummary = ({
           </div>
         )}
       </div>
-     
+
       <div
         style={{
           background: '#d8cfc66b',
@@ -103,15 +101,19 @@ const OrderSummary = ({
         }}
       >
         <div className="invoice" ref={printRef}>
-          <div className="text-center">
-            <div className="d-flex justify-content-center align-items-center gap-2 pt-3">
-              <img src={logo} style={{ width: '30px', objectFit: 'contain' }} alt="logo" />
-              <h5>NEPALI COFFEE</h5>
-            </div>
+          <div className="d-flex justify-content-center align-items-center">
+            <img
+              src={logo}
+              style={{ width: '42px', objectFit: 'contain', margin: '6px 0 10px 0' }}
+              alt="logo"
+            />
           </div>
-
           {/* Order Summary */}
-          <PlacedOrderList orderSummary={orderSummary} setOrderSummary={setOrderSummary} />
+          <PlacedOrderList
+            orderId={selectedTableOrderId}
+            orderSummary={orderSummary}
+            setOrderSummary={setOrderSummary}
+          />
         </div>
       </div>
 
@@ -121,6 +123,7 @@ const OrderSummary = ({
         paymentAmount={getTotalAmount(orderSummary)}
         orderSummary={orderSummary}
         setOrderSummary={setOrderSummary}
+        orderId={selectedTableOrderId}
         handleOk={() => {
           const paidOrders = { ...transactions }
           if (paidOrders[getFormattedDate()]) {

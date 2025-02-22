@@ -1,7 +1,7 @@
-import React from 'react';
-import ModalElement from './elements/Modal';
-import PlacedOrderList from './PlacedOrderList';
-import qr from '../assets/qr.jpg';
+import React from 'react'
+import ModalElement from './elements/Modal'
+import PlacedOrderList from './PlacedOrderList'
+import qr from '../assets/qr.jpg'
 
 const PaymentConfirmationModal = ({
   openModal,
@@ -9,7 +9,8 @@ const PaymentConfirmationModal = ({
   handleCancel,
   paymentAmount,
   orderSummary,
-  setOrderSummary
+  setOrderSummary,
+  orderId
 }) => {
   return (
     <ModalElement
@@ -25,13 +26,11 @@ const PaymentConfirmationModal = ({
               borderRight: '1px solid #ddd',
               display: 'flex',
               flexDirection: 'column',
-              padding: '15px',
+              padding: '15px'
             }}
           >
-            <h5 style={{ textAlign: 'center', marginBottom: '10px', fontWeight: '600' }}>
-              Order Summary
-            </h5>
             <PlacedOrderList
+              orderId={orderId}
               orderSummary={orderSummary}
               setOrderSummary={setOrderSummary}
               viewOnly
@@ -46,18 +45,17 @@ const PaymentConfirmationModal = ({
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'center',
-              alignItems: 'center',
+              alignItems: 'center'
             }}
           >
             {/* QR Code Section */}
             <div
               style={{
                 textAlign: 'center',
-                marginBottom: '20px',
                 position: 'relative',
                 padding: '15px',
                 borderRadius: '12px',
-                display: 'inline-block',
+                display: 'inline-block'
               }}
             >
               {/* Corner Borders */}
@@ -70,7 +68,7 @@ const PaymentConfirmationModal = ({
                   height: '15px',
                   borderTop: '3px solid #c89f77',
                   borderLeft: '3px solid #c89f77',
-                  borderRadius: '8px 0 0 0',
+                  borderRadius: '8px 0 0 0'
                 }}
               ></div>
               <div
@@ -82,7 +80,7 @@ const PaymentConfirmationModal = ({
                   height: '15px',
                   borderTop: '3px solid #c89f77',
                   borderRight: '3px solid #c89f77',
-                  borderRadius: '0 8px 0 0',
+                  borderRadius: '0 8px 0 0'
                 }}
               ></div>
               <div
@@ -94,7 +92,7 @@ const PaymentConfirmationModal = ({
                   height: '15px',
                   borderBottom: '3px solid #c89f77',
                   borderLeft: '3px solid #c89f77',
-                  borderRadius: '0 0 0 8px',
+                  borderRadius: '0 0 0 8px'
                 }}
               ></div>
               <div
@@ -106,7 +104,7 @@ const PaymentConfirmationModal = ({
                   height: '15px',
                   borderBottom: '3px solid #c89f77',
                   borderRight: '3px solid #c89f77',
-                  borderRadius: '0 0 8px 0',
+                  borderRadius: '0 0 8px 0'
                 }}
               ></div>
 
@@ -115,16 +113,16 @@ const PaymentConfirmationModal = ({
 
               {/* Label */}
               <p style={{ marginTop: '10px', fontWeight: 'bold', color: '#333', fontSize: '16px' }}>
-                  Scan to Pay via <span style={{ color: '#d81b60' }}>FonePay</span> App
-                </p>
+                Scan to Pay via <span style={{ color: '#d81b60' }}>FonePay</span> App
+              </p>
             </div>
 
             {/* Payment Amount */}
             <div
               className="d-flex justify-content-center align-items-center"
-              style={{ fontSize: '24px', marginBottom: '10px' }}
+              style={{ fontSize: '24px', marginBottom: '6px' }}
             >
-               Your total is{' '}
+              Your total is{' '}
               <span
                 style={{ color: '#376af5', marginLeft: '4px', fontWeight: 600, fontSize: '28px' }}
               >
@@ -133,8 +131,16 @@ const PaymentConfirmationModal = ({
             </div>
 
             {/* Confirmation Buttons */}
-            <div className="d-flex justify-content-center" style={{ flexDirection: 'column' }}>
-              <p style={{ textAlign: 'center', fontSize: '16px', marginBottom: '10px' }}>
+            <div
+              className="d-flex justify-content-center"
+              style={{
+                flexDirection: 'column',
+                background: '#f0f0f0',
+                padding: '10px',
+                borderRadius: '8px'
+              }}
+            >
+              <p style={{ textAlign: 'center', fontSize: '16px', marginBottom: '6px' }}>
                 Are you sure you want to confirm the payment?
               </p>
               <div className="d-flex justify-content-center" style={{ marginTop: '5px' }}>
@@ -163,7 +169,7 @@ const PaymentConfirmationModal = ({
         </div>
       }
     />
-  );
-};
+  )
+}
 
-export default PaymentConfirmationModal;
+export default PaymentConfirmationModal
