@@ -53,9 +53,10 @@ const PaymentConfirmationModal = ({
               style={{
                 textAlign: 'center',
                 position: 'relative',
-                padding: '15px',
+                padding: '10px',
                 borderRadius: '12px',
-                display: 'inline-block'
+                display: 'inline-block',
+                marginBottom: '10px'
               }}
             >
               {/* Corner Borders */}
@@ -112,7 +113,7 @@ const PaymentConfirmationModal = ({
               <img src={qr} alt="QR Code" style={{ width: '200px', borderRadius: '8px' }} />
 
               {/* Label */}
-              <p style={{ marginTop: '10px', fontWeight: 'bold', color: '#333', fontSize: '16px' }}>
+              <p style={{ margin: '6px', fontWeight: 600, color: '#333', fontSize: '16px' }}>
                 Scan to Pay via <span style={{ color: '#d81b60' }}>FonePay</span> App
               </p>
             </div>
@@ -136,14 +137,14 @@ const PaymentConfirmationModal = ({
               style={{
                 flexDirection: 'column',
                 background: '#f0f0f0',
-                padding: '10px',
+                padding: '14px',
                 borderRadius: '8px'
               }}
             >
-              <p style={{ textAlign: 'center', fontSize: '16px', marginBottom: '6px' }}>
+              <p style={{ textAlign: 'center', marginBottom: '15px' }}>
                 Are you sure you want to confirm the payment?
               </p>
-              <div className="d-flex justify-content-center" style={{ marginTop: '5px' }}>
+              <div className="d-flex justify-content-center">
                 <button
                   onClick={() => {
                     handleOk(true)

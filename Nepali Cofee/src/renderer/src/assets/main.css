@@ -158,3 +158,9 @@ code {
 .ant-modal-content {
   padding: 0;
 }
+
+.flex-centered {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

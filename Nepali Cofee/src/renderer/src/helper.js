@@ -52,3 +52,18 @@ export function getOrderIdAndTotals(data) {
 export function getOrderById(data, orderId) {
   return data.filter((item) => item.orderId === orderId)
 }
+
+export const getItemsToDisplay = (coffeeCategories, selectedCategory, searchedValue) => {
+  if (searchedValue) {
+    const searchedItems = []
+    coffeeCategories?.forEach((singleCategory) =>
+      singleCategory.items.forEach((singleItem) => {
+        if (singleItem.name.toLowerCase().includes(searchedValue.toLowerCase())) {
+          searchedItems.push(singleItem)
+        }
+      })
+    )
+    return searchedItems
+  }
+  return coffeeCategories.find((category) => category.key === selectedCategory)?.items
+}

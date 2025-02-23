@@ -1,7 +1,7 @@
 import React from 'react'
 import '../../src/styles.css'
 import { getTotalAmount } from '../helper'
-import noData from '../assets/exclamation.png'
+import { NoData } from './elements/NoData'
 
 const PlacedOrderList = ({ orderSummary, setOrderSummary, orderId, viewOnly }) => {
   const handleRemoveOrder = (id) => {
@@ -64,9 +64,8 @@ const PlacedOrderList = ({ orderSummary, setOrderSummary, orderId, viewOnly }) =
             ))
           ) : (
             <tr>
-              <td colSpan="5" style={{ textAlign: 'center', padding: '50px 0', fontSize: '14px' }}>
-                <img src={noData} alt="No data found" style={{ width: '50px' }} />
-                <p className="text-muted">No item found</p>
+              <td colSpan="5">
+                <NoData />
               </td>
             </tr>
           )}

@@ -5,7 +5,9 @@ import coffeeImage from '../assets/coffee.png'
 import '../../src/styles.css'
 import coffeeCategories from '../dataModel'
 import OrderSummary from './OrderSummary'
-import { getSelectedTableOrders } from '../helper'
+import { getItemsToDisplay, getSelectedTableOrders } from '../helper'
+import { Search } from './elements/Search/Search'
+import { NoData } from './elements/NoData'
 
 const { Meta } = Card
 
@@ -19,6 +21,7 @@ const FoodCategory = ({
   setPaymentConfirmationStatus,
   selectedTableOrderId
 }) => {
+  const [searchValue, setSearchValue] = useState('')
   const [orderSummary, setOrderSummary] = useState(
     getSelectedTableOrders(cafeTables, selectedTableId) || []
   )
@@ -49,35 +52,43 @@ const FoodCategory = ({
   return (
     <>
       {/* Coffee Theme Styles */}
-      <div className="row text-end ">
-        <div className="col">
-          <button onClick={handleBack} className="btn summary-btn btn-outline-dark">
-            Back to Table
-          </button>
-        </div>
+      <div className="d-flex gap-2">
+        <Search
+          searchValue={searchValue}
+          setSearchValue={(value) => {
+            setSearchValue(value)
+          }}
+        />
+        <button onClick={handleBack} className="btn summary-btn btn-outline-dark">
+          Back to Table
+        </button>
       </div>
       {/* Category Labels (Category Chips) */}
-      <div className="col-6 d-flex gap-4 my-3">
-        {coffeeCategories.map((category) => (
-          <div
-            key={category.key}
-            className={`col rounded-pill py-2 category-card ${
-              selectedCategory === category.key ? 'selected-category' : ''
-            }`}
-            onClick={() => setSelectedCategory(category.key)}
-          >
-            {category.label}
-          </div>
-        ))}
+
+      <div className="d-flex gap-4 my-3 align-items-center" style={{ height: '40px' }}>
+        {searchValue ? (
+          <div> Searched Items </div>
+        ) : (
+          coffeeCategories.map((category) => (
+            <div
+              key={category.key}
+              className={`rounded-pill category-card ${
+                selectedCategory === category.key ? 'selected-category' : ''
+              }`}
+              onClick={() => setSelectedCategory(category.key)}
+            >
+              {category.label}
+            </div>
+          ))
+        )}
       </div>
 
       <div className="row">
         <div className="col-md-8">
           {/* Display food items */}
           <div className="row" id="coffeeDisplay">
-            {coffeeCategories
-              .find((category) => category.key === selectedCategory)
-              ?.items.map((food) => (
+            {getItemsToDisplay(coffeeCategories, selectedCategory, searchValue).length > 0 ? (
+              getItemsToDisplay(coffeeCategories, selectedCategory, searchValue).map((food) => (
                 <div className="col-12 col-md-6 col-lg-4 mb-4" key={food.id}>
                   <Card
                     hoverable
@@ -149,7 +160,10 @@ const FoodCategory = ({
                     </div>
                   </Card>
                 </div>
-              ))}
+              ))
+            ) : (
+              <NoData height={'100%'} />
+            )}
           </div>
         </div>
 

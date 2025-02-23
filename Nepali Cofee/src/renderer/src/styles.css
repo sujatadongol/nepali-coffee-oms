@@ -23,6 +23,8 @@
   border: 2px solid transparent;
   transition: all 0.3s ease;
   background: #e6d5b8;
+  width: 140px;
+  padding: 6px;
 }
 
 .category-card:hover,
@@ -81,7 +83,7 @@
 }
 
 #coffeeDisplay img {
-  margin-left: '80px!important';
+  height: 100%;
 }
 
 .coffee-icon {
@@ -113,4 +115,8 @@
 .order-id {
   text-align: center;
   font-weight: 600;
+}
+
+input:focus {
+  outline: none;
 }
