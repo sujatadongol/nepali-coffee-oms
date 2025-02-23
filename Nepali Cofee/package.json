@@ -3,8 +3,25 @@
   "version": "1.0.0",
   "description": ".",
   "main": "./out/main/index.js",
+  "productName": "Nepali Coffee",
   "author": "example.com",
   "homepage": "https://electron-vite.org",
+  "build": {
+    "appId": "com.yourcompany.yourapp",
+    "productName": "Nepali Coffee",
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "icon": "resources/logo.ico"
+    },
+    "mac": {
+      "icon": "resources/logo.icns"
+    },
+    "linux": {
+      "icon": "resources/logo.png"
+    }
+  },
   "scripts": {
     "format": "prettier --write .",
     "lint": "eslint . --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix",

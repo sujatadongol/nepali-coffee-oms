@@ -2,15 +2,13 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 
-const iconPath = join(__dirname, '../../resources/logo.png')
-
 function createWindow() {
   const mainWindow = new BrowserWindow({
     width: 900,
     height: 670,
     show: false,
     autoHideMenuBar: true,
-    icon: iconPath,  // Using the icon path
+    icon: join(__dirname, '../../resources/logo.png'), // Using the icon path
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false
@@ -28,9 +26,9 @@ function createWindow() {
 
   // HMR for renderer based on electron-vite cli
   if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
-    mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'] + '#/');
+    mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'] + '#/')
   } else {
-    mainWindow.loadFile(join(__dirname, '../renderer/index.html'), { hash: '/' });
+    mainWindow.loadFile(join(__dirname, '../renderer/index.html'), { hash: '/' })
   }
 }
 
@@ -41,7 +39,7 @@ app.whenReady().then(() => {
     optimizer.watchWindowShortcuts(window)
   })
 
-  ipcMain.on('ping', () => console.log('pong'))  // Optional debug message
+  ipcMain.on('ping', () => console.log('pong')) // Optional debug message
 
   createWindow()
 
