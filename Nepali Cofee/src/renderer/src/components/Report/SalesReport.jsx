@@ -18,9 +18,10 @@ import {
 } from 'recharts'
 import { useNavigate } from 'react-router-dom'
 import OrderView from './OrderView'
-import { useReactToPrint } from 'react-to-print'
-import { PrinterOutlined } from '@ant-design/icons'
-import { PrintButton } from '../elements/PrintButton'
+import html2pdf from 'html2pdf.js'
+import { DownloadOutlined } from '@ant-design/icons';
+
+
 
 const SalesReport = () => {
   const [transactions, setTransactions] = useState(getTransactionHistory() || {})
@@ -42,15 +43,35 @@ const SalesReport = () => {
     ? { [selectedDate]: transactions[selectedDate] }
     : transactions
 
-  const handlePrint = useReactToPrint({
-    contentRef: printRef,
-    documentTitle: 'customer-bill'
-  })
+  // const handlePrint = useReactToPrint({
+  //   contentRef: printRef,
+  //   documentTitle: 'customer-bill'
+  // })
 
+  const handleDownloadPDF = () => {
+      const element = printRef.current;
+      html2pdf()
+        .from(element)
+        .set({
+          margin: [10, 10, 10, 10], // Top, Right, Bottom, Left
+          filename: 'sales-report.pdf',
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { scale: 2 },
+          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+          pagebreak: { mode: ['avoid-all', 'css', 'legacy'] } // Avoid breaking tables
+        })
+        .save();
+    };
+
+  console.log({transactions});
   return (
     <>
       <div className="d-flex justify-content-end gap-2">
-        <PrintButton handlePrint={handlePrint} />
+        {/* <PrintButton handlePrint={handlePrint} /> */}
+        <button onClick={handleDownloadPDF} className="btn btn-outline-dark" style={{ padding: '3px 12px'}}>
+          <DownloadOutlined  />
+        </button>
+
 
         <button onClick={() => navigate('/')} className="btn summary-btn btn-outline-dark">
           Back to Table
@@ -59,7 +80,7 @@ const SalesReport = () => {
 
       <div
         ref={printRef}
-        className="d-flex"
+        className="d-flex sales-report"
         style={{ flexDirection: 'column', padding: '10px 3rem' }}
       >
         {/* Graph Section */}
@@ -107,7 +128,9 @@ const SalesReport = () => {
 
         {/* Sales Table */}
         <div style={{ width: '100%', marginTop: '20px' }}>
-          {Object.keys(filteredTransactions).map((single) => (
+          {Object.keys(filteredTransactions)
+           .sort((a, b) => new Date(b) - new Date(a))
+          .map((single) => (
             <div key={single}>
               <div className="d-flex justify-content-between" style={{ paddingTop: '15px' }}>
                 <div style={{ fontWeight: 600 }}>{formatDateInReadableFormat(single)}</div>
@@ -119,9 +142,10 @@ const SalesReport = () => {
                 </div>
               </div>
               {getOrderIdAndTotals(filteredTransactions[single])
-                ?.sort((a, b) => b.createdAt - a.createdAt)
-                .map((singleOrder) => (
+               ?.sort((a, b) => b.createdAt - a.createdAt)
+                .map((singleOrder, index) => (
                   <OrderView
+                    key={index}
                     orderDetail={singleOrder}
                     filteredOrders={getOrderById(filteredTransactions[single], singleOrder.orderId)}
                   />
