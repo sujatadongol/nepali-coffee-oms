@@ -6,7 +6,7 @@ import {
   getTotalAmount,
   getTransactionHistory
 } from '../../helper'
-import { formatDateInReadableFormat } from '../../utils'
+import { formatDateInReadableFormat, sortByDate } from '../../utils'
 import {
   LineChart,
   Line,

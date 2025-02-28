@@ -32,3 +32,16 @@ export function generateOrderId() {
 
   return `#${randomNum}-${dateTime}`
 }
+
+export function sortByDate(arr) {
+  return arr.sort((a, b) => {
+    const dateA = parseDate(a)
+    const dateB = parseDate(b)
+    return dateB - dateA
+  })
+}
+
+function parseDate(dateStr) {
+  const [day, month, year] = dateStr.split('/').map(Number)
+  return new Date(year, month - 1, day) // Month is 0-based in JavaScript Date
+}
