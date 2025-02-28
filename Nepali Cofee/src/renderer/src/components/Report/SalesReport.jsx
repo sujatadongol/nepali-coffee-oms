@@ -126,11 +126,9 @@ const SalesReport = () => {
           </button>
         )}
 
-        {/* Sales Table */}
-        <div style={{ width: '100%', marginTop: '20px' }}>
-          {Object.keys(filteredTransactions)
-           .sort((a, b) => new Date(b) - new Date(a))
-          .map((single) => (
+           {/* Sales Table */}
+           <div style={{ width: '100%', marginTop: '20px' }}>
+          {sortByDate(Object.keys(filteredTransactions))?.map((single) => (
             <div key={single}>
               <div className="d-flex justify-content-between" style={{ paddingTop: '15px' }}>
                 <div style={{ fontWeight: 600 }}>{formatDateInReadableFormat(single)}</div>
@@ -142,10 +140,9 @@ const SalesReport = () => {
                 </div>
               </div>
               {getOrderIdAndTotals(filteredTransactions[single])
-               ?.sort((a, b) => b.createdAt - a.createdAt)
-                .map((singleOrder, index) => (
+                ?.sort((a, b) => b.createdAt - a.createdAt)
+                .map((singleOrder) => (
                   <OrderView
-                    key={index}
                     orderDetail={singleOrder}
                     filteredOrders={getOrderById(filteredTransactions[single], singleOrder.orderId)}
                   />

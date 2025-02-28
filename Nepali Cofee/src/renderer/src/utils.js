@@ -8,9 +8,9 @@ function getDayMonthYear(dateValue = new Date()) {
 
 export function getFormattedDate() {
   const { day, month, year } = getDayMonthYear()
-  return `${day}/${month}/${year}`
+  // return `${day}/${month}/${year}`
 
-  // return `20/02/2025`
+   return `01/03/2025`
 }
 
 export function formatDateInReadableFormat(dateStr) {
