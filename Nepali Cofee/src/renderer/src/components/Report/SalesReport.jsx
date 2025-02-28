@@ -128,8 +128,7 @@ const SalesReport = () => {
 
         {/* Sales Table */}
         <div style={{ width: '100%', marginTop: '20px' }}>
-          {console.log('>>>>>>', Object.keys(filteredTransactions))}
-          {sortByDate(Object.keys(filteredTransactions)).map((single) => (
+          {sortByDate(Object.keys(filteredTransactions))?.map((single) => (
             <div key={single}>
               <div className="d-flex justify-content-between" style={{ paddingTop: '15px' }}>
                 <div style={{ fontWeight: 600 }}>{formatDateInReadableFormat(single)}</div>
