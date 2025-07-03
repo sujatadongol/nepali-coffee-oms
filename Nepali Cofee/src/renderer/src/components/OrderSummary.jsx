@@ -27,13 +27,17 @@ const OrderSummary = ({
   selectedTableOrderId
 }) => {
   const [paymentConfirmationModal, setPaymentConfirmationModal] = useState(false)
+  // New state for controlling VAT and Customer Name inclusion
+  const [includeVatInBill, setIncludeVatInBill] = useState(false) // Default to false
+  const [customerNameForBill, setCustomerNameForBill] = useState('')
+
   const handleOrderPlacement = () => {
     setCafeTables((prevTables) =>
       prevTables.map((t) =>
         t.id === selectedTableId ? { ...t, available: false, orderItems: orderSummary } : t
       )
     )
-    // onBack()
+    // onBack() // Removed for now, as per previous discussions to stay on page
   }
 
   const clearOrder = () => {
@@ -43,15 +47,24 @@ const OrderSummary = ({
       )
     )
     setOrderSummary([])
-    // onBack()
+    // onBack() // Removed for now, as per previous discussions to stay on page
   }
 
   const printRef = useRef(null)
 
   const handlePrint = useReactToPrint({
-    contentRef: printRef,
-    documentTitle: 'customer-bill'
+    content: () => printRef.current, // Ensure content is a function that returns the ref
+    documentTitle: 'customer-bill',
+    // You can add more options here, like onAfterPrint
+    onAfterPrint: () => {
+      // Optional: Clear order or navigate back after printing
+      // clearOrder();
+      // onBack();
+    },
   })
+
+  // Calculate total amount for display and payment modal
+  const currentTotalAmount = getTotalAmount(orderSummary);
 
   return (
     <>
@@ -83,10 +96,41 @@ const OrderSummary = ({
                 Place Order
               </button>
             )}
+            {/* Print button will use the state of includeVatInBill and customerNameForBill */}
             <PrintButton handlePrint={handlePrint} />
           </div>
         )}
       </div>
+
+      {/* Controls for VAT Bill and Customer Name (Moved here from PlacedOrderList) */}
+      {orderSummary.length > 0 && ( // Only show controls if there's an order
+        <div style={{ marginBottom: '20px', padding: '15px', border: '1px solid #eee', borderRadius: '8px', background: '#f9f9f9' }}>
+          <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
+            <input
+              type="checkbox"
+              id="includeVatCheckbox"
+              checked={includeVatInBill}
+              onChange={(e) => setIncludeVatInBill(e.target.checked)}
+              style={{ marginRight: '10px' }}
+            />
+            <label htmlFor="includeVatCheckbox" style={{ fontWeight: 'bold', fontSize: '14px' }}>Include Customer Name & VAT in Bill</label>
+          </div>
+
+          {includeVatInBill && (
+            <div>
+              <label htmlFor="customerNameInput" style={{ display: 'block', marginBottom: '5px', fontSize: '12px', fontWeight: 'bold' }}>Customer Name:</label>
+              <input
+                type="text"
+                id="customerNameInput"
+                value={customerNameForBill}
+                onChange={(e) => setCustomerNameForBill(e.target.value)}
+                style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ccc', fontSize: '12px' }}
+                placeholder="Enter customer name"
+              />
+            </div>
+          )}
+        </div>
+      )}
 
       <div
         style={{
@@ -103,11 +147,14 @@ const OrderSummary = ({
               alt="logo"
             />
           </div>
-          {/* Order Summary */}
+          {/* PlacedOrderList now receives the state from OrderSummary */}
           <PlacedOrderList
             orderId={selectedTableOrderId}
             orderSummary={orderSummary}
             setOrderSummary={setOrderSummary}
+            viewOnly={true} // IMPORTANT: Bill for printing should always be viewOnly
+            initialIncludeVat={includeVatInBill} // Pass the state controlling VAT inclusion
+            initialCustomerName={customerNameForBill} // Pass the customer name state
           />
         </div>
       </div>
@@ -115,7 +162,7 @@ const OrderSummary = ({
       <PaymentConfirmationModal
         openModal={paymentConfirmationModal}
         handleCancel={() => setPaymentConfirmationModal(false)}
-        paymentAmount={getTotalAmount(orderSummary)}
+        paymentAmount={currentTotalAmount} // Pass the calculated total
         orderSummary={orderSummary}
         setOrderSummary={setOrderSummary}
         orderId={selectedTableOrderId}
@@ -136,7 +183,7 @@ const OrderSummary = ({
           setPaymentConfirmationModal(false)
           setPaymentConfirmationStatus(true)
           clearOrder()
-          handlePrint()
+          handlePrint() // Trigger print after payment confirmation
           onBack()
         }}
       />

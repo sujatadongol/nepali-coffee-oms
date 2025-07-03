@@ -110,6 +110,8 @@ const PaymentConfirmationModal = ({
               ></div>
 
               {/* QR Code */}
+              <p className='fw-bold pt-0 mt-0' style={{ color: '#3b5dcd'}}>Garima Bikas Bank Limited</p>
+
               <img src={qr} alt="QR Code" style={{ width: '200px', borderRadius: '8px' }} />
 
               {/* Label */}
