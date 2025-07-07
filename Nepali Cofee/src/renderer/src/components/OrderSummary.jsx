@@ -96,13 +96,7 @@ const OrderSummary = ({
         }}
       >
         <div className="invoice" ref={printRef}>
-          <div className="d-flex justify-content-center align-items-center">
-            <img
-              src={logo}
-              style={{ width: '42px', objectFit: 'contain', margin: '6px 0 10px 0' }}
-              alt="logo"
-            />
-          </div>
+        
           {/* Order Summary */}
           <PlacedOrderList
             orderId={selectedTableOrderId}
@@ -115,7 +109,8 @@ const OrderSummary = ({
       <PaymentConfirmationModal
         openModal={paymentConfirmationModal}
         handleCancel={() => setPaymentConfirmationModal(false)}
-        paymentAmount={getTotalAmount(orderSummary)}
+        // paymentAmount={getTotalAmount(orderSummary)}
+         paymentAmount={getTotalAmount(orderSummary).grandTotal} 
         orderSummary={orderSummary}
         setOrderSummary={setOrderSummary}
         orderId={selectedTableOrderId}

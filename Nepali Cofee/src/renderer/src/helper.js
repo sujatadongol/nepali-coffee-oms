@@ -14,8 +14,21 @@ export const checkIfOrderIsPlaced = (cafeTables, selectedTableId) => {
 }
 
 export const getTotalAmount = (orderList) => {
-  return orderList?.reduce((acc, item) => acc + item.price * item.quantity, 0)
-}
+  if (!orderList || orderList.length === 0) {
+    return {
+      subTotal: 0,
+      vatAmount: 0,
+      grandTotal: 0
+    };
+  }
+
+  const subTotal = orderList.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  const vatAmount = subTotal * 0.13; // 13% VAT
+  const grandTotal = subTotal + vatAmount;
+
+  return { subTotal, vatAmount, grandTotal };
+};
+
 
 export const getTransactionHistory = () => {
   const transactionStr = localStorage.getItem('transactionHistory')
