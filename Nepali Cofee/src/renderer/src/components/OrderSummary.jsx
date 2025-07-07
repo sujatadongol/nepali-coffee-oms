@@ -7,12 +7,14 @@ import {
   checkIfOrderIsPlaced,
   getOrdersWithOrderId,
   getSelectedTableDetail,
+  getStandardizedDate,
   getTotalAmount
 } from '../helper'
 import PaymentConfirmationModal from './PaymentConfirmationModal'
 import { getFormattedDate } from '../utils'
 import PlacedOrderList from './PlacedOrderList'
 import { PrintButton } from './elements/PrintButton'
+
 
 const OrderSummary = ({
   selectedTableId,
@@ -114,24 +116,30 @@ const OrderSummary = ({
         setOrderSummary={setOrderSummary}
         orderId={selectedTableOrderId}
         handleOk={() => {
-          const paidOrders = { ...transactions }
-          if (paidOrders[getFormattedDate()]) {
-            paidOrders[getFormattedDate()] = [
-              ...paidOrders[getFormattedDate()],
-              ...getOrdersWithOrderId(orderSummary, selectedTableOrderId)
-            ]
+          const paidOrders = { ...transactions };
+          
+          // Use the new, reliable date function
+          const todayKey = getStandardizedDate();
+
+          console.log({todayKey});
+          if (paidOrders[todayKey]) {
+              paidOrders[todayKey] = [
+                  ...paidOrders[todayKey],
+                  ...getOrdersWithOrderId(orderSummary, selectedTableOrderId)
+              ];
           } else {
-            paidOrders[getFormattedDate()] = [
-              ...getOrdersWithOrderId(orderSummary, selectedTableOrderId)
-            ]
+              paidOrders[todayKey] = [
+                  ...getOrdersWithOrderId(orderSummary, selectedTableOrderId)
+              ];
           }
-          setTransactions(paidOrders)
-          localStorage.setItem('transactionHistory', JSON.stringify(paidOrders))
-          setPaymentConfirmationModal(false)
-          setPaymentConfirmationStatus(true)
-          clearOrder()
-          handlePrint()
-          onBack()
+          
+          setTransactions(paidOrders);
+          localStorage.setItem('transactionHistory', JSON.stringify(paidOrders));
+          setPaymentConfirmationModal(false);
+          setPaymentConfirmationStatus(true);
+          clearOrder();
+          handlePrint();
+          onBack();
         }}
       />
     </>

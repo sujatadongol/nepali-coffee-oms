@@ -72,8 +72,7 @@ export default function TableList() {
                 key={item.id}
                 title={item.name}
                 hoverable
-                headStyle={{ background: '#d8cfc66b' }}
-                style={{ width: '48%', textAlign: 'center' }}
+                style={{ width: '48%', textAlign: 'center', background: '#d8cfc669' }}
                 onClick={() => {
                   setSelectedTableId(item.id)
                   setSelectedTableOrderId(generateOrderId())

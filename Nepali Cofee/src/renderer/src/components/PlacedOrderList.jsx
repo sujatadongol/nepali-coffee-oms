@@ -9,6 +9,7 @@ const PlacedOrderList = ({
   setOrderSummary,
   orderId,
   viewOnly,
+  mode="bill",
   restaurantName = 'NEPALI COFFEE',
   restaurantLocation = 'Dillibazar, Kathmandu',
   restaurantPan = '621262502'
@@ -39,6 +40,19 @@ const PlacedOrderList = ({
 
   const { subTotal, vatAmount, grandTotal } = getTotalAmount(orderSummary);
 
+
+   if (mode === 'history') {
+    return (
+      <ul style={{ listStyle: 'none', paddingLeft: 0 }}>
+        {orderSummary.map((item, index) => (
+          <li key={index} style={{ padding: '4px 0', borderBottom: '1px solid #eee' }}>
+            <strong>{item.name}</strong> x {item.quantity} – Rs. {item.price}
+          </li>
+        ))}
+      </ul>
+    )
+  }
+  
   return (
       <div className="row justify-content-center m-2">
           <div style={{ 
@@ -154,7 +168,7 @@ const PlacedOrderList = ({
                 <div className="non-printable" hidden={viewOnly}></div>
               </div>
               
-              {orderSummary.length > 0 ? (
+              {orderSummary?.length > 0 ? (
                 orderSummary.map((item, index) => (
                   <div key={index} style={{ 
                     display: 'grid', 

@@ -29,8 +29,22 @@ export const getTotalAmount = (orderList) => {
   return { subTotal, vatAmount, grandTotal };
 };
 
+// In your helper/utils.js file
+export const getStandardizedDate = () => {
+  const today = new Date();
+  const year = today.getFullYear();
+  
+  // getMonth() is 0-indexed (0 for Jan), so add 1
+  const month = String(today.getMonth() + 1).padStart(2, '0'); 
+  
+  const day = String(today.getDate()).padStart(2, '0');
+  
+  return `${year}-${month}-${day}`; // Returns "2025-07-07"
+};
+
 export const getTransactionHistory = () => {
   const transactionStr = localStorage.getItem('transactionHistory')
+  console.log(transactionStr);
   if (transactionStr) {
     return JSON.parse(transactionStr)
   }
@@ -42,28 +56,54 @@ export const getOrdersWithOrderId = (initialOrders, orderId) => {
   })
 }
 
-export function getOrderIdAndTotals(data) {
-  const orderMap = new Map()
+export const getOrderIdAndTotals = (dailyItemsArray) => {
+  if (!dailyItemsArray || dailyItemsArray.length === 0) {
+    return { grandTotal: [] }; // Return empty structure if no items
+  }
 
-  data.forEach((item) => {
-    if (orderMap.has(item.orderId)) {
-      let existingOrder = orderMap.get(item.orderId)
-      existingOrder.total += item.price * item.quantity
-    } else {
-      orderMap.set(item.orderId, {
-        orderId: item.orderId,
-        total: item.price * item.quantity,
-        createdAt: item.createdAt
-      })
+  // 1. Group items by their orderId
+  const orders = dailyItemsArray.reduce((acc, item) => {
+    if (!acc[item.orderId]) {
+      acc[item.orderId] = {
+        items: [],
+        createdAt: item.createdAt,
+      };
     }
-  })
+    acc[item.orderId].items.push(item);
+    return acc;
+  }, {});
 
-  return Array.from(orderMap.values())
-}
+  // 2. Create the final array with VAT-inclusive totals
+  const grandTotal = Object.keys(orders).map(orderId => {
+    const order = orders[orderId];
+    
+    // --- THIS IS THE KEY CHANGE ---
+    // a. Calculate the subtotal for this specific order
+    const orderSubTotal = order.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    // b. Calculate the final total including 13% VAT
+    const orderGrandTotal = orderSubTotal * 1.13;
+    
+    return {
+      orderId: orderId,
+      total: orderGrandTotal, // Use the new VAT-inclusive total here
+      createdAt: order.createdAt,
+    };
+  });
 
-export function getOrderById(data, orderId) {
-  return data.filter((item) => item.orderId === orderId)
-}
+  return { grandTotal };
+};
+
+// --- NEW ROBUST VERSION ---
+export const getOrderById = (dailyItemsArray, orderId) => {
+  if (!dailyItemsArray || !orderId) {
+    return { grandTotal: [] }; // Return empty structure
+  }
+  
+  // Filter the array to get only the items matching the requested orderId
+  const grandTotal = dailyItemsArray.filter(item => item.orderId === orderId);
+
+  return { grandTotal };
+};
 
 export const getItemsToDisplay = (coffeeCategories, selectedCategory, searchedValue) => {
   if (searchedValue) {
