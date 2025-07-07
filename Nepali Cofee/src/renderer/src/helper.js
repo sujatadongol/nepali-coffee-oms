@@ -29,7 +29,6 @@ export const getTotalAmount = (orderList) => {
   return { subTotal, vatAmount, grandTotal };
 };
 
-
 export const getTransactionHistory = () => {
   const transactionStr = localStorage.getItem('transactionHistory')
   if (transactionStr) {

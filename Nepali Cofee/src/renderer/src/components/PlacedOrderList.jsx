@@ -37,7 +37,7 @@ const PlacedOrderList = ({
     setIsEditingName(true)
   }
 
-  const { subTotal, vatAmount, grandTotal } = getTotalAmount(orderSummary)
+  const { subTotal, vatAmount, grandTotal } = getTotalAmount(orderSummary);
 
   return (
       <div className="row justify-content-center m-2">

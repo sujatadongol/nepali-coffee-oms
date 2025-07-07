@@ -109,8 +109,7 @@ const OrderSummary = ({
       <PaymentConfirmationModal
         openModal={paymentConfirmationModal}
         handleCancel={() => setPaymentConfirmationModal(false)}
-        // paymentAmount={getTotalAmount(orderSummary)}
-         paymentAmount={getTotalAmount(orderSummary).grandTotal} 
+        paymentAmount={getTotalAmount(orderSummary)}
         orderSummary={orderSummary}
         setOrderSummary={setOrderSummary}
         orderId={selectedTableOrderId}
