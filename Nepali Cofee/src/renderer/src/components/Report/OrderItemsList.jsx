@@ -11,7 +11,7 @@ const OrderItemsList = ({ orderDetail, filteredOrders }) => {
       {/* Order Header */}
       <div style={styles.header}>
         <span style={styles.orderId}>Order ID: {orderDetail.orderId}</span>
-        <span style={styles.total}>Total: Rs {orderDetail.total.toFixed(2)}</span>
+        <span style={styles.total}>Total: Rs {Math.round(orderDetail.total)}</span>
       </div>
 
       {/* Items Table */}
@@ -29,8 +29,8 @@ const OrderItemsList = ({ orderDetail, filteredOrders }) => {
             <tr key={`${item.id}-${index}`} style={styles.tr}>
               <td>{item.name}</td>
               <td style={styles.centerText}>{item.quantity}</td>
-              <td style={styles.rightText}>{item.price.toFixed(2)}</td>
-              <td style={styles.rightText}>{(item.price * item.quantity).toFixed(2)}</td>
+              <td style={styles.rightText}>{Math.round(item.price)}</td>
+              <td style={styles.rightText}>{Math.round(item.price * item.quantity)}</td>
             </tr>
           ))}
         </tbody>

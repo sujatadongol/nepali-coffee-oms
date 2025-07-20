@@ -85,7 +85,7 @@ const PrintableReport = React.forwardRef(({ data, timeframe }, ref) => {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <h3 style={{ margin: 0 }}>{formatPeriodLabel(periodKey, timeframe)}</h3>
               <div style={{ fontWeight: 'bold' }}>
-                Total Sales: Rs. {getTotalAmount(data[periodKey]).grandTotal.toFixed(2)}
+                Total Sales: Rs. {Math.round(getTotalAmount(data[periodKey]).grandTotal)}
               </div>
             </div>
           </div>
@@ -221,7 +221,7 @@ const SalesReport = () => {
       </div>
 
       <div className="d-flex ms-5 gap-4 float-end" >
-          <input type="date" value={customStartDate} onChange={(e) => setCustomStartDate(e.target.value)} className="form-control bg-light" style={{width : '300px'}} />
+          <input type="date" value={customStartDate} onChange={(e) => setCustomStartDate(e.target.value)} className="form-control" style={{width : '300px'}} />
           <input type="date" value={customEndDate} onChange={(e) => setCustomEndDate(e.target.value)} className="form-control" style={{width : '300px'}} />
       </div>
       <div className="sales-report-container">
@@ -259,7 +259,7 @@ const SalesReport = () => {
                     <div style={{ fontWeight: 600 }}>
                       Total Sales:{' '}
                       <span style={{ color: '#376af5', fontWeight: 600 }}>
-                        Rs. {getTotalAmount(transactionsToShow[periodKey]).grandTotal.toFixed(2)}
+                        Rs. {Math.round(getTotalAmount(transactionsToShow[periodKey]).grandTotal)}
                       </span>
                     </div>
                   </div>

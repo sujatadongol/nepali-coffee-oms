@@ -192,9 +192,9 @@ const PlacedOrderList = ({
                       <span>{item.name}</span>
                     </div>
                     <div style={{ textAlign: 'center' }}>{item.quantity}</div>
-                    <div style={{ textAlign: 'right' }}>{item.price.toFixed(2)}</div>
+                    <div style={{ textAlign: 'right' }}>{Math.round(item.price)}</div>
                     <div style={{ textAlign: 'right', fontWeight: '500' }}>
-                      {(item.quantity * item.price).toFixed(2)}
+                      {Math.round(item.quantity * item.price)}
                     </div>
                     <div className="non-printable" hidden={viewOnly}>
                       <button
@@ -229,7 +229,7 @@ const PlacedOrderList = ({
                 marginBottom: '4px'
               }}>
                 <span>Subtotal:</span>
-                <span>Rs {subTotal.toFixed(2)}</span>
+                <span>Rs {Math.round(subTotal)}</span>
               </div>
               
               <div style={{ 
@@ -240,7 +240,7 @@ const PlacedOrderList = ({
                 color: '#666'
               }}>
                 <span>VAT (13%):</span>
-                <span>Rs {vatAmount.toFixed(2)}</span>
+                <span>Rs {Math.round(vatAmount)}</span>
               </div>
               
               <div style={{ 
@@ -255,7 +255,7 @@ const PlacedOrderList = ({
                   fontWeight: 'bold'
                 }}>
                   <span>TOTAL:</span>
-                  <span>Rs {grandTotal.toFixed(2)}</span>
+                  <span>Rs {Math.round(grandTotal)}</span>
                 </div>
               </div>
             </div>

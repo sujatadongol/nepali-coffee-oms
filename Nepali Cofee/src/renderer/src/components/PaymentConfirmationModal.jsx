@@ -129,7 +129,7 @@ const PaymentConfirmationModal = ({
               <span
                 style={{ color: '#376af5', marginLeft: '4px', fontWeight: 600, fontSize: '28px' }}
               >
-                {paymentAmount.grandTotal.toFixed(2)}
+                {Math.round(paymentAmount.grandTotal)}
               </span>
             </div>
 
