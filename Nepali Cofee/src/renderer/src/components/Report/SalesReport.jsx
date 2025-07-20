@@ -20,7 +20,7 @@ import {
 } from '../../helper';
 import OrderItemsList from './OrderItemsList';
 
-// --- HELPER FUNCTIONS (unchanged) ---
+// --- HELPER FUNCTIONS ---
 const parseToYYYYMMDD = (dateStr) => {
   if (dateStr.includes('-')) return dateStr;
   const parts = dateStr.split('/');
@@ -65,6 +65,9 @@ const formatPeriodLabel = (period, timeframe) => {
     return period;
   }
 };
+const calculateVAT = (amount, rate = 0.13) => {
+  return amount * rate / (1 + rate); // If VAT is included
+};
 
 const PrintableReport = React.forwardRef(({ data, timeframe }, ref) => {
   const timeframeTitle = timeframe.charAt(0).toUpperCase() + timeframe.slice(1);
@@ -79,28 +82,32 @@ const PrintableReport = React.forwardRef(({ data, timeframe }, ref) => {
         </p>
       </div>
 
-      {sortedPeriods.map((periodKey) => (
-        <div key={periodKey} style={{ pageBreakInside: 'avoid', marginBottom: '25px' }}>
-          <div style={{ padding: '8px', background: '#f0f2f5', borderRadius: '4px', border: '1px solid #e8e8e8' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <h3 style={{ margin: 0 }}>{formatPeriodLabel(periodKey, timeframe)}</h3>
-              <div style={{ fontWeight: 'bold' }}>
-                Total Sales: Rs. {Math.round(getTotalAmount(data[periodKey]).grandTotal)}
+      {sortedPeriods.map((periodKey) => {
+        const total = Math.round(getTotalAmount(data[periodKey]).grandTotal);
+        const vat = Math.round(calculateVAT(total));
+        return (
+          <div key={periodKey} style={{ pageBreakInside: 'avoid', marginBottom: '25px' }}>
+            <div style={{ padding: '8px', background: '#f0f2f5', borderRadius: '4px', border: '1px solid #e8e8e8' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <h3 style={{ margin: 0 }}>{formatPeriodLabel(periodKey, timeframe)}</h3>
+                <div style={{ textAlign: 'right' }}>
+                  <div style={{ fontWeight: 'bold' }}>Total Sales: Rs. {total}</div>
+                </div>
               </div>
             </div>
-          </div>
 
-          {getOrderIdAndTotals(data[periodKey])
-            .grandTotal?.sort((a, b) => a.createdAt - b.createdAt)
-            .map((singleOrder) => (
-              <OrderItemsList
-                key={singleOrder.orderId}
-                orderDetail={singleOrder}
-                filteredOrders={getOrderById(data[periodKey], singleOrder.orderId).grandTotal}
-              />
-            ))}
-        </div>
-      ))}
+            {getOrderIdAndTotals(data[periodKey])
+              .grandTotal?.sort((a, b) => a.createdAt - b.createdAt)
+              .map((singleOrder) => (
+                <OrderItemsList
+                  key={singleOrder.orderId}
+                  orderDetail={singleOrder}
+                  filteredOrders={getOrderById(data[periodKey], singleOrder.orderId).grandTotal}
+                />
+              ))}
+          </div>
+        );
+      })}
     </div>
   );
 });
@@ -115,7 +122,6 @@ const SalesReport = () => {
   const pdfContentRef = useRef(null);
 
   const standardizedTransactions = useMemo(() => {
-    if (!transactions) return {};
     const newTrans = {};
     for (const dateKey in transactions) {
       const yyyyMmDdKey = parseToYYYYMMDD(dateKey);
@@ -144,18 +150,15 @@ const SalesReport = () => {
 
   const filteredAggregatedData = useMemo(() => {
     if (!customStartDate || !customEndDate) return aggregatedData;
-    const start = new Date(customStartDate);
-    const end = new Date(customEndDate);
     return Object.fromEntries(
       Object.entries(aggregatedData).filter(([periodKey]) => {
         const date = buildDateFromYYYYMMDD(
           timeframe === 'monthly' ? `${periodKey}-01` : periodKey
         );
-      return (
-        date.getTime() >= new Date(customStartDate).setHours(0, 0, 0, 0) &&
-        date.getTime() <= new Date(customEndDate).setHours(23, 59, 59, 999)
-      );
-
+        return (
+          date.getTime() >= new Date(customStartDate).setHours(0, 0, 0, 0) &&
+          date.getTime() <= new Date(customEndDate).setHours(23, 59, 59, 999)
+        );
       })
     );
   }, [aggregatedData, customStartDate, customEndDate, timeframe]);
@@ -210,7 +213,6 @@ const SalesReport = () => {
           <button type="button" className={`btn ${timeframe === 'monthly' ? 'btn-primary' : 'btn-outline-primary'}`} onClick={() => handleTimeframeChange('monthly')}>Monthly</button>
         </div>
         <div className="d-flex gap-2 mt-2 mt-md-0">
-         
           <button onClick={handleDownloadPDF} className="btn btn-outline-dark">
             <DownloadOutlined /> PDF
           </button>
@@ -221,16 +223,22 @@ const SalesReport = () => {
       </div>
 
       <div className="d-flex ms-5 gap-4 float-end" >
-          <input type="date" value={customStartDate} onChange={(e) => setCustomStartDate(e.target.value)} className="form-control" style={{width : '300px'}} />
-          <input type="date" value={customEndDate} onChange={(e) => setCustomEndDate(e.target.value)} className="form-control" style={{width : '300px'}} />
+        <input type="date" value={customStartDate} onChange={(e) => setCustomStartDate(e.target.value)} className="form-control" style={{ width: '300px' }} />
+        <input type="date" value={customEndDate} onChange={(e) => setCustomEndDate(e.target.value)} className="form-control" style={{ width: '300px' }} />
       </div>
+
       <div className="sales-report-container">
         <h3 className="text-center mb-3">
           {timeframe.charAt(0).toUpperCase() + timeframe.slice(1)} Sales Overview
         </h3>
+
         <div style={{ width: '100%', height: 300 }}>
           <ResponsiveContainer>
-            <LineChart data={graphData} onClick={(e) => { if (e && e.activePayload) { setSelectedPeriod(e.activePayload[0].payload.rawPeriod); } }}>
+            <LineChart data={graphData} onClick={(e) => {
+              if (e && e.activePayload) {
+                setSelectedPeriod(e.activePayload[0].payload.rawPeriod);
+              }
+            }}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="periodLabel" />
               <YAxis />
@@ -251,30 +259,35 @@ const SalesReport = () => {
         <div className="mt-4">
           {Object.keys(transactionsToShow)
             .sort((a, b) => b.localeCompare(a))
-            .map((periodKey) => (
-              <div key={periodKey} className="mb-4">
-                <div className="p-2 rounded" style={{ background: '#f8f9fa', borderBottom: '2px solid #dee2e6' }}>
-                  <div className="d-flex justify-content-between">
-                    <div style={{ fontWeight: 600 }}>{formatPeriodLabel(periodKey, timeframe)}</div>
-                    <div style={{ fontWeight: 600 }}>
-                      Total Sales:{' '}
-                      <span style={{ color: '#376af5', fontWeight: 600 }}>
-                        Rs. {Math.round(getTotalAmount(transactionsToShow[periodKey]).grandTotal)}
-                      </span>
+            .map((periodKey) => {
+              const total = Math.round(getTotalAmount(transactionsToShow[periodKey]).grandTotal);
+              const vat = Math.round(calculateVAT(total));
+              return (
+                <div key={periodKey} className="mb-4">
+                  <div className="p-2 rounded" style={{ background: '#f8f9fa', borderBottom: '2px solid #dee2e6' }}>
+                    <div className="d-flex justify-content-between">
+                      <div style={{ fontWeight: 600 }}>{formatPeriodLabel(periodKey, timeframe)}</div>
+                      <div style={{ textAlign: 'right' }}>
+                        <div style={{ fontWeight: 600 }}>
+                          Total Sales: <span style={{ color: '#376af5' }}>Rs. {total}</span>
+                        </div>
+                  
+                      </div>
                     </div>
                   </div>
+
+                  {getOrderIdAndTotals(transactionsToShow[periodKey])
+                    .grandTotal?.sort((a, b) => b.createdAt - a.createdAt)
+                    .map((singleOrder) => (
+                      <OrderItemsList
+                        key={singleOrder.orderId}
+                        orderDetail={singleOrder}
+                        filteredOrders={getOrderById(transactionsToShow[periodKey], singleOrder.orderId).grandTotal}
+                      />
+                    ))}
                 </div>
-                {getOrderIdAndTotals(transactionsToShow[periodKey])
-                  .grandTotal?.sort((a, b) => b.createdAt - a.createdAt)
-                  .map((singleOrder) => (
-                    <OrderItemsList
-                      key={singleOrder.orderId}
-                      orderDetail={singleOrder}
-                      filteredOrders={getOrderById(transactionsToShow[periodKey], singleOrder.orderId).grandTotal}
-                    />
-                  ))}
-              </div>
-            ))}
+              );
+            })}
         </div>
       </div>
     </>

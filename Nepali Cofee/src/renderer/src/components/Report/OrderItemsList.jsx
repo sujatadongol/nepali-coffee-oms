@@ -1,10 +1,13 @@
 import React from 'react';
 
 const OrderItemsList = ({ orderDetail, filteredOrders }) => {
-  // Don't render anything if there are no items for this order
   if (!filteredOrders || filteredOrders.length === 0) {
     return null;
   }
+const subTotal = filteredOrders.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  const vatAmount = subTotal * 0.13; // 13% VAT
+  const grandTotal = subTotal + vatAmount;
+
 
   return (
     <div style={styles.container}>
@@ -25,15 +28,32 @@ const OrderItemsList = ({ orderDetail, filteredOrders }) => {
           </tr>
         </thead>
         <tbody>
-          {filteredOrders.map((item, index) => (
-            <tr key={`${item.id}-${index}`} style={styles.tr}>
-              <td>{item.name}</td>
-              <td style={styles.centerText}>{item.quantity}</td>
-              <td style={styles.rightText}>{Math.round(item.price)}</td>
-              <td style={styles.rightText}>{Math.round(item.price * item.quantity)}</td>
-            </tr>
-          ))}
+          {filteredOrders.map((item, index) => {
+            const amount = item.price * item.quantity;
+            return (
+              <tr key={`${item.id}-${index}`} style={styles.tr}>
+                <td>{item.name}</td>
+                <td style={styles.centerText}>{item.quantity}</td>
+                <td style={styles.rightText}>{Math.round(item.price)}</td>
+                <td style={styles.rightText}>{Math.round(amount)}</td>
+              </tr>
+            );
+          })}
         </tbody>
+        <tfoot>
+          <tr>
+            <td colSpan="3" style={{ ...styles.rightText, fontWeight: 'bold' }}>Subtotal:</td>
+            <td style={{ ...styles.rightText, fontWeight: 'bold' }}>
+              Rs {Math.round(subTotal)}
+            </td>
+          </tr>
+          <tr>
+            <td colSpan="3" style={{ ...styles.rightText, fontWeight: 'bold' }}>VAT (13%):</td>
+            <td style={{ ...styles.rightText, fontWeight: 'bold' }}>
+              Rs {Math.round(vatAmount)}
+            </td>
+          </tr>
+        </tfoot>
       </table>
     </div>
   );
