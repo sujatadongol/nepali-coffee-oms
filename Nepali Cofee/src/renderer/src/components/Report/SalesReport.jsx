@@ -30,9 +30,9 @@ const parseToYYYYMMDD = (dateStr) => {
   return dateStr;
 };
 const buildDateFromYYYYMMDD = (dateString) => {
-    const [year, month, day] = dateString.split('-').map(Number);
-    return new Date(year, month - 1, day);
-}
+  const [year, month, day] = dateString.split('-').map(Number);
+  return new Date(year, month - 1, day);
+};
 const getStartOfWeek = (dateString) => {
   const date = buildDateFromYYYYMMDD(dateString);
   date.setDate(date.getDate() - date.getDay());
@@ -66,12 +66,9 @@ const formatPeriodLabel = (period, timeframe) => {
   }
 };
 
-
-// --- STEP 1: CREATE THE NEW PRINTABLE COMPONENT ---
-// This component is designed to look good on a PDF.
 const PrintableReport = React.forwardRef(({ data, timeframe }, ref) => {
   const timeframeTitle = timeframe.charAt(0).toUpperCase() + timeframe.slice(1);
-  const sortedPeriods = Object.keys(data).sort((a, b) => a.localeCompare(b)); // Sort chronological
+  const sortedPeriods = Object.keys(data).sort((a, b) => a.localeCompare(b));
 
   return (
     <div ref={ref} style={{ padding: '20px', fontFamily: 'sans-serif' }}>
@@ -92,16 +89,14 @@ const PrintableReport = React.forwardRef(({ data, timeframe }, ref) => {
               </div>
             </div>
           </div>
-          
+
           {getOrderIdAndTotals(data[periodKey])
-            .grandTotal?.sort((a, b) => a.createdAt - b.createdAt) // Sort orders chronologically
+            .grandTotal?.sort((a, b) => a.createdAt - b.createdAt)
             .map((singleOrder) => (
               <OrderItemsList
                 key={singleOrder.orderId}
                 orderDetail={singleOrder}
-                filteredOrders={
-                  getOrderById(data[periodKey], singleOrder.orderId).grandTotal
-                }
+                filteredOrders={getOrderById(data[periodKey], singleOrder.orderId).grandTotal}
               />
             ))}
         </div>
@@ -110,17 +105,15 @@ const PrintableReport = React.forwardRef(({ data, timeframe }, ref) => {
   );
 });
 
-
 const SalesReport = () => {
   const [transactions] = useState(getTransactionHistory() || {});
   const [timeframe, setTimeframe] = useState('daily');
   const [selectedPeriod, setSelectedPeriod] = useState(null);
+  const [customStartDate, setCustomStartDate] = useState('');
+  const [customEndDate, setCustomEndDate] = useState('');
   const navigate = useNavigate();
-
-  // --- STEP 2: ADD A NEW REF FOR THE PDF CONTENT ---
   const pdfContentRef = useRef(null);
-  
-  // Data processing logic (unchanged)
+
   const standardizedTransactions = useMemo(() => {
     if (!transactions) return {};
     const newTrans = {};
@@ -133,6 +126,7 @@ const SalesReport = () => {
     }
     return newTrans;
   }, [transactions]);
+
   const aggregatedData = useMemo(() => {
     const aggregator = {};
     Object.entries(standardizedTransactions).forEach(([date, orders]) => {
@@ -147,6 +141,25 @@ const SalesReport = () => {
     });
     return aggregator;
   }, [standardizedTransactions, timeframe]);
+
+  const filteredAggregatedData = useMemo(() => {
+    if (!customStartDate || !customEndDate) return aggregatedData;
+    const start = new Date(customStartDate);
+    const end = new Date(customEndDate);
+    return Object.fromEntries(
+      Object.entries(aggregatedData).filter(([periodKey]) => {
+        const date = buildDateFromYYYYMMDD(
+          timeframe === 'monthly' ? `${periodKey}-01` : periodKey
+        );
+      return (
+        date.getTime() >= new Date(customStartDate).setHours(0, 0, 0, 0) &&
+        date.getTime() <= new Date(customEndDate).setHours(23, 59, 59, 999)
+      );
+
+      })
+    );
+  }, [aggregatedData, customStartDate, customEndDate, timeframe]);
+
   const graphData = useMemo(() =>
     Object.keys(aggregatedData)
       .map((period) => ({
@@ -157,6 +170,7 @@ const SalesReport = () => {
       .sort((a, b) => a.rawPeriod.localeCompare(b.rawPeriod)),
     [aggregatedData, timeframe]
   );
+
   const transactionsToShow = useMemo(() => {
     if (selectedPeriod) {
       return { [selectedPeriod]: aggregatedData[selectedPeriod] };
@@ -164,43 +178,39 @@ const SalesReport = () => {
     return aggregatedData;
   }, [selectedPeriod, aggregatedData]);
 
-  const handleTimeframeChange = (newTimeframe) => { setTimeframe(newTimeframe); setSelectedPeriod(null); };
-
-
-  // --- STEP 3: UPDATE THE PDF DOWNLOAD FUNCTION ---
-  const handleDownloadPDF = () => {
-    const element = pdfContentRef.current;
-    const opt = {
-      margin:       10,
-      filename:     `sales-report-${timeframe}-${new Date().toISOString().split('T')[0]}.pdf`,
-      image:        { type: 'jpeg', quality: 0.98 },
-      html2canvas:  { scale: 2, useCORS: true, letterRendering: true },
-      jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    };
-    html2pdf().from(element).set(opt).save();
+  const handleTimeframeChange = (newTimeframe) => {
+    setTimeframe(newTimeframe);
+    setSelectedPeriod(null);
   };
 
+  const handleDownloadPDF = () => {
+    setTimeout(() => {
+      const element = pdfContentRef.current;
+      const opt = {
+        margin: 10,
+        filename: `sales-report-${timeframe}-${new Date().toISOString().split('T')[0]}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+      html2pdf().from(element).set(opt).save();
+    }, 500);
+  };
 
   return (
     <>
-      {/* This div renders the hidden component that will be used for the PDF.
-          It does not appear on the screen. */}
       <div style={{ position: 'absolute', left: '-9999px', top: 0 }}>
-        <PrintableReport 
-          ref={pdfContentRef} 
-          data={aggregatedData} // Pass all aggregated data, not just the filtered view
-          timeframe={timeframe} 
-        />
+        <PrintableReport ref={pdfContentRef} data={filteredAggregatedData} timeframe={timeframe} />
       </div>
 
-      {/* --- VISIBLE UI (unchanged) --- */}
       <div className="d-flex justify-content-between align-items-center mb-3 flex-wrap">
         <div className="btn-group" role="group">
           <button type="button" className={`btn ${timeframe === 'daily' ? 'btn-primary' : 'btn-outline-primary'}`} onClick={() => handleTimeframeChange('daily')}>Daily</button>
           <button type="button" className={`btn ${timeframe === 'weekly' ? 'btn-primary' : 'btn-outline-primary'}`} onClick={() => handleTimeframeChange('weekly')}>Weekly</button>
           <button type="button" className={`btn ${timeframe === 'monthly' ? 'btn-primary' : 'btn-outline-primary'}`} onClick={() => handleTimeframeChange('monthly')}>Monthly</button>
         </div>
-        <div className="d-flex justify-content-end gap-2 mt-2 mt-md-0">
+        <div className="d-flex gap-2 mt-2 mt-md-0">
+         
           <button onClick={handleDownloadPDF} className="btn btn-outline-dark">
             <DownloadOutlined /> PDF
           </button>
@@ -209,15 +219,18 @@ const SalesReport = () => {
           </button>
         </div>
       </div>
-      
-      {/* We remove the `ref` from this container */}
+
+      <div className="d-flex ms-5 gap-4 float-end" >
+          <input type="date" value={customStartDate} onChange={(e) => setCustomStartDate(e.target.value)} className="form-control bg-light" style={{width : '300px'}} />
+          <input type="date" value={customEndDate} onChange={(e) => setCustomEndDate(e.target.value)} className="form-control" style={{width : '300px'}} />
+      </div>
       <div className="sales-report-container">
-        <h3 className="text-center" style={{ marginBottom: '15px' }}>
+        <h3 className="text-center mb-3">
           {timeframe.charAt(0).toUpperCase() + timeframe.slice(1)} Sales Overview
         </h3>
         <div style={{ width: '100%', height: 300 }}>
           <ResponsiveContainer>
-            <LineChart data={graphData} onClick={(e) => { if (e && e.activePayload) { setSelectedPeriod(e.activePayload[0].payload.rawPeriod); }}}>
+            <LineChart data={graphData} onClick={(e) => { if (e && e.activePayload) { setSelectedPeriod(e.activePayload[0].payload.rawPeriod); } }}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="periodLabel" />
               <YAxis />
@@ -235,9 +248,9 @@ const SalesReport = () => {
           </div>
         )}
 
-        <div style={{ width: '100%', marginTop: '30px' }}>
+        <div className="mt-4">
           {Object.keys(transactionsToShow)
-            .sort((a, b) => b.localeCompare(a)) 
+            .sort((a, b) => b.localeCompare(a))
             .map((periodKey) => (
               <div key={periodKey} className="mb-4">
                 <div className="p-2 rounded" style={{ background: '#f8f9fa', borderBottom: '2px solid #dee2e6' }}>
@@ -257,10 +270,7 @@ const SalesReport = () => {
                     <OrderItemsList
                       key={singleOrder.orderId}
                       orderDetail={singleOrder}
-                      filteredOrders={
-                        getOrderById(transactionsToShow[periodKey], singleOrder.orderId)
-                          .grandTotal
-                      }
+                      filteredOrders={getOrderById(transactionsToShow[periodKey], singleOrder.orderId).grandTotal}
                     />
                   ))}
               </div>
