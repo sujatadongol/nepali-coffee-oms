@@ -7,6 +7,7 @@ import PaymentConfirmationStatus from './PaymentConfirmationStatus'
 import { getTransactionHistory } from '../helper'
 import { useNavigate } from 'react-router-dom' // Import useNavigate
 import { generateOrderId } from '../utils'
+import {Link} from 'react-router-dom'
 
 export default function TableList() {
   const [cafeTables, setCafeTables] = useState([
@@ -53,11 +54,14 @@ export default function TableList() {
       ) : (
         <>
           <div className="d-flex justify-content-end">
+             
+            <Link to="/menuManager"><button className='btn btn-md btn-secondary no-wrap me-4'>Menu Manager</button></Link>
+
             <button
               onClick={() => {
                 navigate('/salesreport')
               }}
-              className="btn d-flex summary-btn btn-primary"
+              className="btn d-flex summary-btn  btn-primary"
               style={{ gap: '8px', minWidth: '80px' }}
             >
               <div>

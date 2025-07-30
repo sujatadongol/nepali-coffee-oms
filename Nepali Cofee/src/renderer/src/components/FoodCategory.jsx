@@ -1,15 +1,14 @@
-import React, { useState } from 'react'
-import { Card, Button, InputNumber } from 'antd'
-import { PlusOutlined, MinusOutlined } from '@ant-design/icons'
-import coffeeImage from '../assets/coffee.png'
-import '../../src/styles.css'
-import coffeeCategories from '../dataModel'
-import OrderSummary from './OrderSummary'
-import { getItemsToDisplay, getSelectedTableOrders } from '../helper'
-import { Search } from './elements/Search/Search'
-import { NoData } from './elements/NoData'
+import React, { useState, useEffect } from 'react';
+import { Card, Button, InputNumber } from 'antd';
+import { PlusOutlined, MinusOutlined } from '@ant-design/icons';
+import coffeeImage from '../assets/coffee.png';
+import '../../src/styles.css';
+import OrderSummary from './OrderSummary';
+import { getSelectedTableOrders } from '../helper';
+import { Search } from './elements/Search/Search';
+import { NoData } from './elements/NoData';
 
-const { Meta } = Card
+const { Meta } = Card;
 
 const FoodCategory = ({
   selectedTableId,
@@ -21,63 +20,78 @@ const FoodCategory = ({
   setPaymentConfirmationStatus,
   selectedTableOrderId
 }) => {
-  const [searchValue, setSearchValue] = useState('')
+  const [searchValue, setSearchValue] = useState('');
+  const [menuItems, setMenuItems] = useState([]);
   const [orderSummary, setOrderSummary] = useState(
     getSelectedTableOrders(cafeTables, selectedTableId) || []
-  )
-  const [selectedCategory, setSelectedCategory] = useState('Black Coffee')
-  const [quantities, setQuantities] = useState({})
+  );
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [quantities, setQuantities] = useState({});
+
+  useEffect(() => {
+    const data = localStorage.getItem('menuItems');
+    if (data) {
+      const parsedItems = JSON.parse(data);
+      setMenuItems(parsedItems);
+
+      // Set the first category as selected by default
+      const firstCategory = parsedItems[0]?.category || '';
+      setSelectedCategory(firstCategory);
+    }
+  }, []);
+
+  const categories = [...new Set(menuItems.map(item => item.category))];
+
+  const filteredItems = menuItems.filter(item =>
+    (selectedCategory ? item.category === selectedCategory : true) &&
+    item.name.toLowerCase().includes(searchValue.toLowerCase())
+  );
 
   const handleBack = () => {
-    onBack()
-  }
+    onBack();
+  };
 
   const handleQuantityChange = (value, id) => {
-    setQuantities((prev) => ({ ...prev, [id]: value }))
-  }
+    setQuantities(prev => ({ ...prev, [id]: value }));
+  };
 
   const handleAddClick = (food) => {
-    const quantity = quantities[food.id] || 1
-    setOrderSummary((prev) => {
-      const existingItem = prev.find((item) => item.id === food.id)
+    const quantity = quantities[food.id] || 1;
+    setOrderSummary(prev => {
+      const existingItem = prev.find(item => item.id === food.id);
       if (existingItem) {
-        return prev.map((item) =>
+        return prev.map(item =>
           item.id === food.id ? { ...item, quantity: item.quantity + quantity } : item
-        )
+        );
       }
-      return [...prev, { ...food, quantity }]
-    })
-  }
+      return [...prev, { ...food, quantity }];
+    });
+  };
 
   return (
     <>
-      {/* Coffee Theme Styles */}
       <div className="d-flex gap-2">
         <Search
           searchValue={searchValue}
-          setSearchValue={(value) => {
-            setSearchValue(value)
-          }}
+          setSearchValue={(value) => setSearchValue(value)}
         />
         <button onClick={handleBack} className="btn summary-btn btn-outline-dark">
           Back to Table
         </button>
       </div>
-      {/* Category Labels (Category Chips) */}
 
+      {/* Category Chips */}
       <div className="d-flex gap-4 my-3 align-items-center" style={{ height: '40px' }}>
         {searchValue ? (
-          <div> Searched Items </div>
+          <div>Showing results for: <strong>{searchValue}</strong></div>
         ) : (
-          coffeeCategories.map((category) => (
+          categories.map(category => (
             <div
-              key={category.key}
-              className={`rounded-pill category-card ${
-                selectedCategory === category.key ? 'selected-category' : ''
-              }`}
-              onClick={() => setSelectedCategory(category.key)}
+              key={category}
+              className={`rounded-pill category-card ${selectedCategory === category ? 'selected-category' : ''}`}
+              onClick={() => setSelectedCategory(category)}
             >
-              {category.label}
+              {category.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
             </div>
           ))
         )}
@@ -85,10 +99,9 @@ const FoodCategory = ({
 
       <div className="row">
         <div className="col-md-8">
-          {/* Display food items */}
           <div className="row" id="coffeeDisplay">
-            {getItemsToDisplay(coffeeCategories, selectedCategory, searchValue).length > 0 ? (
-              getItemsToDisplay(coffeeCategories, selectedCategory, searchValue).map((food) => (
+            {filteredItems.length > 0 ? (
+              filteredItems.map((food) => (
                 <div className="col-12 col-md-6 col-lg-4 mb-4" key={food.id}>
                   <Card
                     hoverable
@@ -96,8 +109,8 @@ const FoodCategory = ({
                     cover={
                       <img
                         className="food-image"
-                        alt="coffee image"
-                        src={food.imgSrc ? food.imgSrc : coffeeImage}
+                        alt="food"
+                        src={food.imgSrc || coffeeImage}
                       />
                     }
                   >
@@ -105,15 +118,8 @@ const FoodCategory = ({
                       title={<span className="coffee-title">{food.name}</span>}
                       description={<span className="price">Rs {food.price}</span>}
                     />
-                    <div className="d-flex mt-4" style={{ justifyContent: 'space-between' }}>
-                      <div
-                        style={{
-                          display: 'flex',
-                          justifyContent: 'center',
-                          alignItems: 'center'
-                        }}
-                      >
-                        {/* Decrease Button */}
+                    <div className="d-flex mt-4 justify-content-between">
+                      <div className="d-flex align-items-center">
                         <Button
                           className="counter-btn"
                           icon={<MinusOutlined />}
@@ -125,8 +131,6 @@ const FoodCategory = ({
                           }
                           style={{ borderRadius: '6px 0 0 6px' }}
                         />
-
-                        {/* Quantity Display */}
                         <InputNumber
                           min={1}
                           max={20}
@@ -134,8 +138,6 @@ const FoodCategory = ({
                           value={quantities[food.id] || 1}
                           onChange={(value) => handleQuantityChange(value, food.id)}
                         />
-
-                        {/* Increase Button */}
                         <Button
                           className="counter-btn"
                           icon={<PlusOutlined />}
@@ -148,10 +150,7 @@ const FoodCategory = ({
                       <div className="d-flex justify-content-center">
                         <Button
                           type="primary"
-                          style={{
-                            background: '#4B2E2E',
-                            border: 'none'
-                          }}
+                          style={{ background: '#4B2E2E', border: 'none' }}
                           onClick={() => handleAddClick(food)}
                         >
                           Add
@@ -167,7 +166,7 @@ const FoodCategory = ({
           </div>
         </div>
 
-        <div className="col-12 col-xs-12 col-md-4 col-lg-4">
+        <div className="col-12 col-md-4">
           <OrderSummary
             selectedTableId={selectedTableId}
             cafeTables={cafeTables}
@@ -183,7 +182,7 @@ const FoodCategory = ({
         </div>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default FoodCategory
+export default FoodCategory;
