@@ -1,52 +1,53 @@
-import React from 'react';
-import * as XLSX from 'xlsx';
+import React from 'react'
+import * as XLSX from 'xlsx'
 
 const ExcelUploader = ({ onUploadComplete }) => {
-    const handleFileUpload = (e) =>{
-        const file = e.target.files[0];
-        if(!file) return;
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0]; // Get the first file from the input
+    if (!file) return;
 
-        const reader = new FileReader();
-        reader.onload = (event) => {
-            try{
-                const data =  new Uint8Array(event.target.result);
-                const workbook = XLSX.read(data, {type : 'array'});
-                const sheet = workbook.Sheets[workbook.SheetNames[0]];
-                const parsedData = XLSX.utils.sheet_to_json(sheet);
-        
-                const formattedItems = parsedData.map((item, index) => ({
-                id: `excel-${Date.now()}-${index}`,
-                name: item.name?.trim() || '',
-                price: parseFloat(item.price),
-                category: item.category?.trim().toLowerCase() || '',
-                description: item.description?.trim() || '',
-                imgSrc: item.imgSrc?.trim() || '',
-                isStatic: false
-                }));
+    const reader = new FileReader(); // Read the file as an ArrayBuffer
 
-                   const validItems = formattedItems.filter(
-                    (item) => item.name && !isNaN(item.price) && item.category
-                    );
+    reader.onload = (event) => {
+      try {
+        const data = new Uint8Array(event.target.result); // Convert the file data to a Uint8Array
+        const workbook = XLSX.read(data, { type: 'array' }) // Parse the Excel file
+        const sheet = workbook.Sheets[workbook.SheetNames[0]] // Get the first sheet
+        const parsedData = XLSX.utils.sheet_to_json(sheet) // Convert the sheet to JSON
 
-                    if (validItems.length === 0) {
-                    alert('❌ No valid items found. Please check your Excel format.');
-                    return;
-                    }
-             const existingItems = JSON.parse(localStorage.getItem('menuItems') || '[]');
-        const updatedItems = [...existingItems, ...validItems];
+        const formattedItems = parsedData.map((item, index) => ({
+          id: `excel-${Date.now()}-${index}`,
+          name: item.name?.trim() || '',
+          price: parseFloat(item.price),
+          category: item.category?.trim().toLowerCase() || '',
+          description: item.description?.trim() || '',
+          imgSrc: item.imgSrc?.trim() || '',
+          isStatic: false
+        }))
 
-        localStorage.setItem('menuItems', JSON.stringify(updatedItems));
-        alert(`✅ Successfully added ${validItems.length} item(s) to the menu.`);
+        const validItems = formattedItems.filter(
+          (item) => item.name && !isNaN(item.price) && item.category
+        )
 
-        if (onUploadComplete) onUploadComplete();
+        if (validItems.length === 0) {
+          alert('❌ No valid items found. Please check your Excel format.')
+          return
+        }
+        const existingItems = JSON.parse(localStorage.getItem('menuItems') || '[]')
+        const updatedItems = [...existingItems, ...validItems]
+
+        localStorage.setItem('menuItems', JSON.stringify(updatedItems))
+        alert(`✅ Successfully added ${validItems.length} item(s) to the menu.`)
+
+        if (onUploadComplete) onUploadComplete()
       } catch (error) {
-        alert('❌ Error reading Excel file. Please check the format.');
-        console.error(error);
+        alert('❌ Error reading Excel file. Please check the format.')
+        console.error(error)
       }
-    };
+    }
 
-    reader.readAsArrayBuffer(file);
-  };
+    reader.readAsArrayBuffer(file)
+  }
 
   return (
     <div className="mb-4">
@@ -57,13 +58,13 @@ const ExcelUploader = ({ onUploadComplete }) => {
         className="form-control"
         onChange={handleFileUpload}
       />
-      <small className="text-muted d-block mt-2">
+      {/* <small className="text-muted d-block mt-2">
         <a href="../../assets/coffee_menu_data.xlsx" download>
           📥 Download Sample Excel Template
         </a>
-      </small>
+      </small> */}
     </div>
-  );
-};
+  )
+}
 
-export default ExcelUploader;
+export default ExcelUploader
