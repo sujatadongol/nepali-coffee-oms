@@ -55,7 +55,7 @@ export default function TableList() {
         <>
           <div className="d-flex justify-content-end">
              
-            <Link to="/menuManager"><button className='btn btn-md btn-secondary no-wrap me-4'>Menu Manager</button></Link>
+            {/* <Link to="/menuManager"><button className='btn btn-md btn-secondary no-wrap me-4'>Menu Manager</button></Link> */}
 
             <button
               onClick={() => {

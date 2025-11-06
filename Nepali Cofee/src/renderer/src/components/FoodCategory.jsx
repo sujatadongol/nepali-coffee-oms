@@ -7,6 +7,7 @@ import OrderSummary from './OrderSummary';
 import { getSelectedTableOrders } from '../helper';
 import { Search } from './elements/Search/Search';
 import { NoData } from './elements/NoData';
+import coffeeCategories from '../dataModel';
 
 const { Meta } = Card;
 
@@ -29,15 +30,18 @@ const FoodCategory = ({
   const [quantities, setQuantities] = useState({});
 
   useEffect(() => {
-    const data = localStorage.getItem('menuItems');
-    if (data) {
-      const parsedItems = JSON.parse(data);
-      setMenuItems(parsedItems);
+    // Build menu items from the imported coffeeCategories and attach a `category` field
+    // so each item can be filtered by category in this component.
+    const data = coffeeCategories.flatMap(category =>
+      category.items.map(item => ({ ...item, category: category.key }))
+    );
 
-      // Set the first category as selected by default
-      const firstCategory = parsedItems[0]?.category || '';
-      setSelectedCategory(firstCategory);
-    }
+    // Set the derived items into state
+    setMenuItems(data);
+
+    // Set the first category as selected by default (use the first coffeeCategories key)
+    const firstCategory = coffeeCategories[0]?.key || '';
+    setSelectedCategory(firstCategory);
   }, []);
 
   const categories = [...new Set(menuItems.map(item => item.category))];

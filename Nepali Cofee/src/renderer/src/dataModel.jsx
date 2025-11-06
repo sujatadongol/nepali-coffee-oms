@@ -45,6 +45,7 @@ import redVelvetCake from './assets/redVelvet.jpeg'
 import mudMuffin from './assets/mudMuffin.jpeg'
 import creambellIceCream from './assets/scoop.jpg'
 import bubbleTea from './assets/bubbleTea.jpg'
+import noData from './assets/noData.png'
 
 const coffeeCategories = [
   {
@@ -79,52 +80,48 @@ const coffeeCategories = [
     key: 'Cold Coffee',
     label: 'Cold Coffee',
     items: [
-      { id: 'c26', name: 'Iced Americano', price: 190, imgSrc: icedamericano },
-      { id: 'c27', name: 'Iced Flavored Americano', price: 205, imgSrc: icedFlavouredamericano },
-      { id: 'c28', name: 'Iced Latte', price: 199, imgSrc: icedlatte },
-      { id: 'c29', name: 'Iced Flavored Latte', price: 220, imgSrc: iceFlavouredlatte },
-      { id: 'c30', name: 'Iced Flavored Macchiato', price: 220, imgSrc: iceFlavouredmachhiato },
-      { id: 'c31', name: 'Blended Mocha', price: 285, imgSrc: blendedMocha },
-      { id: 'c32', name: 'Blended Vanilla Mocha', price: 325, imgSrc: blendedVanillaMocha },
-      { id: 'c33', name: 'Flavoured Blended Mocha', price: 325, imgSrc: flavouredBlendedMoha }
+      { id: 'c26', name: 'Iced Expresso(Small)', price: 70, imgSrc: noData },
+  { id: 'c27', name: 'Iced Expresso(Large)', price: 75, imgSrc: noData },
+  { id: 'c28', name: 'Iced Americano(Small)', price: 80, imgSrc: noData },
+  { id: 'c29', name: 'Iced Americano(Large)', price: 85, imgSrc: noData },
+  { id: 'c30', name: 'Iced Mocha(Small)', price: 80, imgSrc: noData },
+  { id: 'c31', name: 'Iced Mocha(Large)', price: 85, imgSrc: noData },
+  { id: 'c32', name: 'Iced Cappuccino Frappe', price: 95, imgSrc: noData },
+  { id: 'c33', name: 'Latte Frappe', price: 95, imgSrc: noData },
+  { id: 'c34', name: 'Iced Latte(Small)', price: 85, imgSrc: noData },
+  { id: 'c35', name: 'Iced Latte(Large)', price: 90, imgSrc: noData },
+  { id: 'c36', name: 'Iced Matcha(Small)', price: 100, imgSrc: noData },
+  { id: 'c37', name: 'Iced Matcha(Large)', price: 110, imgSrc: noData },
+  { id: 'c38', name: 'Matcha Frappe', price: 115, imgSrc: noData },
+  { id: 'c39', name: 'Iced Caramel Macchiato', price: 110, imgSrc: noData }
     ]
   },
   {
     key: 'Coffee Alternatives',
     label: 'Alternatives',
     items: [
-      { id: 'c43', name: 'Bubble Tea', price: 200, imgSrc: bubbleTea },
-      { id: 'c17', name: 'Hot Chocolate', price: 195, imgSrc: hotchocolate },
-      { id: 'c18', name: 'Hot Lemon', price: 60, imgSrc: hotlemon },
-      { id: 'c19', name: 'Honey Hot Lemon', price: 160, imgSrc: HoneyHotLemon },
-      { id: 'c20', name: 'Ginger Hot Lemon', price: 95, imgSrc: gingerhotlemon },
-      { id: 'c21', name: 'Ginger Honey Hot Lemon', price: 170, imgSrc: gingerhotlemon },
-      { id: 'c22', name: 'Steamed Milk', price: 105, imgSrc: steamemilk },
-      { id: 'c23', name: 'Milk Tea', price: 80, imgSrc: milktea },
-      { id: 'c24', name: 'Black Tea', price: 50, imgSrc: blacktea },
-      { id: 'c25', name: 'Green Tea', price: 70, imgSrc: greentea }
+      { id: 'c40', name: 'Orange Juice', price: 45, imgSrc: noData },
+      { id: 'c41', name: 'Watermelon Juice', price: 45, imgSrc: noData },
+      { id: 'c42', name: 'Pineapple Juice', price: 45, imgSrc: noData },
+      { id: 'c43', name: 'Coke / Sprite / Fanta', price: 35, imgSrc: noData },
+      { id: 'c44', name: 'Red Bull (Local)', price: 25, imgSrc: noData },
+      { id: 'c45', name: 'Red Bull (Blue)', price: 100, imgSrc: noData }
     ]
   },
   {
     key: 'Bakery',
     label: 'Bakery',
     items: [
-      { id: 'c34', name: 'Cookies', price: 150, imgSrc: cookies },
-      { id: 'c35', name: 'Nuts over Brownie', price: 110, imgSrc: brownie },
-      { id: 'c36', name: 'Browny Cake', price: 160, imgSrc: brownyCake },
-      { id: 'c37', name: 'Creambell Ice Cream (per scoop)', price: 80, imgSrc: creambellIceCream },
-      { id: 'c38', name: 'Mixed Fruit Cake', price: 160, imgSrc: mixedFruitCake },
-      { id: 'c39', name: 'Choco Chips Cake', price: 160, imgSrc: chocoChipsCake },
-      { id: 'c40', name: 'Butter Scotch Cake', price: 160, imgSrc: butterScotchCake },
-      { id: 'c41', name: 'Red Velvet Cake', price: 150, imgSrc: redVelvetCake },
-      { id: 'c42', name: 'Mud Muffin', price: 110, imgSrc: mudMuffin },
-      { id: 'c44', name: 'Cho Danish', price: 100, imgSrc: choDanish },
-      { id: 'c45', name: 'Choco Bun', price: 130, imgSrc: chocoBun },
-      { id: 'c46', name: 'Coconut Bun', price: 130, imgSrc: coconutBun },
-      { id: 'c47', name: 'Cinamon Donut', price: 80, imgSrc: cinamonDonut },
-      { id: 'c48', name: 'Mini Lava', price: 80, imgSrc: miniLava },
-      { id: 'c49', name: 'Chicken Patties', price: 135, imgSrc: chicPattie },
-      { id: 'c50', name: 'Paneer Patties', price: 130, imgSrc: paneerPattie }
+      { id: 'c17', name: 'Cookies', price: 150, imgSrc: cookies },
+      { id: 'c18', name: 'Nuts over Brownie', price: 110, imgSrc: brownie },
+      { id: 'c19', name: 'Browny Cake', price: 160, imgSrc: brownyCake },
+      { id: 'c20', name: 'Creambell Ice Cream (per scoop)', price: 80, imgSrc: creambellIceCream },
+      { id: 'c21', name: 'Mixed Fruit Cake', price: 160, imgSrc: mixedFruitCake },
+      { id: 'c22', name: 'Choco Chips Cake', price: 160, imgSrc: chocoChipsCake },
+      { id: 'c23', name: 'Butter Scotch Cake', price: 160, imgSrc: butterScotchCake },
+      { id: 'c24', name: 'Red Velvet Cake', price: 150, imgSrc: redVelvetCake },
+      { id: 'c25', name: 'Mud Muffin', price: 110, imgSrc: mudMuffin },
+  
     ]    
   }
 ];
