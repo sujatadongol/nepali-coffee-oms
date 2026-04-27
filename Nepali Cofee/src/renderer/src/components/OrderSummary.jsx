@@ -115,6 +115,8 @@ const OrderSummary = ({
         orderSummary={orderSummary}
         setOrderSummary={setOrderSummary}
         orderId={selectedTableOrderId}
+        merchantId={2222160018972257}
+        secretKey={'41241bfb1c1f405283339fde32961a64'}
         handleOk={() => {
           const paidOrders = { ...transactions };
           

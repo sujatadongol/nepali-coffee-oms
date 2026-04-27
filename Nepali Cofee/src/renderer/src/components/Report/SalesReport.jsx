@@ -150,19 +150,30 @@ const SalesReport = () => {
 
   const filteredAggregatedData = useMemo(() => {
     if (!customStartDate || !customEndDate) return aggregatedData;
+  
+    const startDate = new Date(customStartDate).setHours(0, 0, 0, 0);
+    const endDate = new Date(customEndDate).setHours(23, 59, 59, 999);
+  
     return Object.fromEntries(
       Object.entries(aggregatedData).filter(([periodKey]) => {
-        const date = buildDateFromYYYYMMDD(
-          timeframe === 'monthly' ? `${periodKey}-01` : periodKey
-        );
-        return (
-          date.getTime() >= new Date(customStartDate).setHours(0, 0, 0, 0) &&
-          date.getTime() <= new Date(customEndDate).setHours(23, 59, 59, 999)
-        );
+        let date;
+        if (timeframe === 'monthly') {
+          // For monthly, append "-01" to create a valid date
+          date = buildDateFromYYYYMMDD(`${periodKey}-01`);
+        } else if (timeframe === 'weekly') {
+          // For weekly, use the start of the week
+          date = buildDateFromYYYYMMDD(periodKey);
+        } else {
+          // For daily, use the periodKey directly
+          date = buildDateFromYYYYMMDD(periodKey);
+        }
+  
+        const time = date.getTime();
+        return time >= startDate && time <= endDate;
       })
     );
   }, [aggregatedData, customStartDate, customEndDate, timeframe]);
-
+  
   const graphData = useMemo(() =>
     Object.keys(aggregatedData)
       .map((period) => ({

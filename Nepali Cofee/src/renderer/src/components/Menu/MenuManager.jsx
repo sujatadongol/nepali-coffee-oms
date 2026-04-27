@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
   Plus, Coffee, Snowflake, Milk, Circle, Croissant, Edit2, Trash2
 } from 'lucide-react';
-import ExcelUploader from './ExcelUploader';
+// import ExcelUploader from './ExcelUploader';
 
 const MenuManager = () => {
   const staticMenuData = [/* Your static data here */];
@@ -178,7 +178,7 @@ const MenuManager = () => {
               </div>
             </div>
 
-            <ExcelUploader onUploadComplete={() => window.location.reload()} />
+            {/* <ExcelUploader onUploadComplete={() => window.location.reload()} /> */}
 
             {showForm && (
               <div className="modal d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
